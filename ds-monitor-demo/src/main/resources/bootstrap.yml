@@ -1,0 +1,24 @@
+server:
+  port: 9012
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true
+spring:
+  application:
+    name: rd-demo-server
+  profiles:
+    active: local
+  main:
+    allow-bean-definition-overriding: true
+
+
+yj:
+  monitor:
+    admin:
+      host: 127.0.0.1
+      port: 9001
+    retry: true
+    retryTime: 3
+    is-throw-able: true
+    monitor-open: true

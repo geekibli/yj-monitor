@@ -1,0 +1,43 @@
+{
+  "properties": [
+    {
+      "name": "yj.monitor.admin.host",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.admin.host."
+    },
+    {
+      "name": "yj.monitor.admin.port",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.admin.port."
+    },
+    {
+      "name": "yj.monitor.retry",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.retry."
+    },
+    {
+      "name": "yj.monitor.retryTime",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.retryTime."
+    },
+    {
+      "name": "yj.monitor.isOpen",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.isOpen."
+    },
+    {
+      "name": "yj.monitor.heart-port",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.heart-port."
+    },
+    {
+      "name": "yj.monitor.admin.access-key",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.admin.access-key."
+    },
+    {
+      "name": "yj.monitor.admin.secret",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.admin.secret."
+    }
+  ] }

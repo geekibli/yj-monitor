@@ -1,0 +1,27 @@
+server:
+  port: 10000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true
+spring:
+  application:
+    name: ds-monitor-core
+  profiles:
+    active: local
+  main:
+    allow-bean-definition-overriding: true
+
+yj:
+  monitor:
+    client-id: yjmonitorcore001
+    admin:
+      host: 127.0.0.1
+      port: 9000
+      access-key: gaoleif1e629
+      secret: 123654
+    retry: true
+    retryTime: 3
+    is-throw-able: true
+    monitor-open: true
+    heart-port: 9001

@@ -1,0 +1,39 @@
+server:
+  port: 9000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true
+spring:
+  application:
+    name: ds-minitor-admin
+  profiles:
+    active: local
+  main:
+    allow-bean-definition-overriding: true
+
+yj:
+  monitor:
+    heart:
+      port: 9001
+      fail-time: 10
+      reader-idle-time: 3
+      writer-idle-time: 0
+      all-idle-time: 0
+    thread-pool:
+      core-size: 3
+    default-auth:
+      access-key: gaoleif1e629
+      secret: 123654
+    gc:
+      initial-delay: 15
+      delay: 30
+    memory:
+      initial-delay: 20
+      delay: 30
+    thread:
+      initial-delay: 25
+      delay: 30
+    runtime:
+      initial-delay: 30
+      delay: 30

@@ -1,0 +1,63 @@
+{
+  "properties": [
+    {
+      "name": "yj.monitor.thread-pool.core-size",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.thread-pool.core-size."
+    },
+    {
+      "name": "yj.monitor.default-auth.access-key",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.default-auth.access-key."
+    },
+    {
+      "name": "yj.monitor.default-auth.secret",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.default-auth.secret."
+    },
+    {
+      "name": "yj.monitor.gc.initialDelay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.gc.initialDelay."
+    },
+    {
+      "name": "yj.monitor.gc.delay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.gc.delay."
+    },
+    {
+      "name": "yj.monitor.memory.initialDelay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.memory.initialDelay."
+    },
+    {
+      "name": "yj.monitor.memory.delay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.memory.delay."
+    },
+    {
+      "name": "yj.monitor.thread.initialDelay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.thread.initialDelay."
+    },
+    {
+      "name": "yj.monitor.thread.delay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.thread.delay."
+    },
+    {
+      "name": "yj.monitor.runtime.initialDelay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.runtime.initialDelay."
+    },
+    {
+      "name": "yj.monitor.runtime.delay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.runtime.delay."
+    },
+    {
+      "name": "yj.monitor.gc.initial-delay",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.gc.initial-delay."
+    }
+  ] }
