@@ -1,11 +1,19 @@
 package com.yj.monitor.admin.service;
 
 import com.yj.monitor.admin.config.AdminMonitorConfig;
+import com.yj.monitor.admin.disruptor.MonitorEvent;
+import com.yj.monitor.admin.disruptor.MonitorEventProducer;
 import com.yj.monitor.admin.doman.ClientContainer;
+import com.yj.monitor.admin.entity.*;
+import com.yj.monitor.admin.mapper.*;
 import com.yj.monitor.admin.runner.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,34 +24,57 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class PullMonitorService {
 
+    private final Logger logger = LoggerFactory.getLogger(PullMonitorService.class);
+
     @Resource
     private AdminMonitorConfig adminMonitorConfig;
+    @Resource
+    private MonitorEventProducer monitorEventProducer;
+    @Resource
+    private MonitorMemoryMapper monitorMemoryMapper;
+    @Resource
+    private MonitorMemoryPartitionMapper monitorMemoryPartitionMapper;
+    @Resource
+    private MonitorThreadMapper monitorThreadMapper;
+    @Resource
+    private MonitorClassLoadMapper monitorClassLoadMapper;
+    @Resource
+    private MonitorGcMapper monitorGcMapper;
 
+    /**
+     * 定时执行
+     * 1、读取客户端注册列表
+     * 2、生成客户端任务，通过disruptor进行发布
+     * 3、disruptor 按照顺序消费
+     */
     public synchronized void execute() {
-        pullMemory();
-        pullThread();
-        pullRuntime();
-        pullGc();
+        logger.info("【 Monitor admin 】start schedule job. ");
+        MonitorPool.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 0, 5, TimeUnit.SECONDS);
     }
 
-    public void pullMemory() {
-        AdminMonitorConfig.ScheduleConfig memory = adminMonitorConfig.getMemory();
-        MonitorPool.build().scheduleWithFixedDelay(new PullMemoryTask(), memory.getInitialDelay(), memory.getDelay(), TimeUnit.SECONDS);
+
+    /**
+     * disruptor 消费者处理逻辑
+     *
+     * @param monitorEvent 监控时间
+     * @param l            任务序列号
+     * @param b            b
+     */
+    public void handleDisruptor(MonitorEvent monitorEvent, long l, boolean b) {
+        Future<MonitorThread> threadFuture = MonitorExecutor.build().submit(new PullThreadTask(monitorEvent));
+        Future<MonitorMemory> memoryFuture = MonitorExecutor.build().submit(new PullMemoryTask(monitorEvent));
+        Future<List<MonitorMemoryPartition>> memoryPartitionFuture = MonitorExecutor.build().submit(new PullMemoryPartitionTask(monitorEvent));
+        Future<MonitorClassLoad> memoryClassLoadFuture = MonitorExecutor.build().submit(new PullClassLoadTask(monitorEvent));
+        Future<MonitorGc> memoryGcFuture = MonitorExecutor.build().submit(new PullGcTask(monitorEvent));
+
+
+
+
+
+
+
+
     }
 
-    public void pullThread() {
-        AdminMonitorConfig.ScheduleConfig thread = adminMonitorConfig.getThread();
-        MonitorPool.build().scheduleWithFixedDelay(new PullThreadTask(ClientContainer.onlineClient()), thread.getInitialDelay(), thread.getDelay(), TimeUnit.SECONDS);
-    }
-
-    public void pullRuntime() {
-        AdminMonitorConfig.ScheduleConfig runtime = adminMonitorConfig.getRuntime();
-        MonitorPool.build().scheduleWithFixedDelay(new PullRuntimeTask(ClientContainer.onlineClient()), runtime.getInitialDelay(), runtime.getDelay(), TimeUnit.SECONDS);
-    }
-
-    public void pullGc() {
-        AdminMonitorConfig.ScheduleConfig gc = adminMonitorConfig.getGc();
-        MonitorPool.build().scheduleWithFixedDelay(new PullGcTask(ClientContainer.onlineClient()), gc.getInitialDelay(), gc.getDelay(), TimeUnit.SECONDS);
-    }
 
 }

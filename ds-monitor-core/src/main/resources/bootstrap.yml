@@ -23,5 +23,5 @@ yj:
     retry: true
     retryTime: 3
     is-throw-able: true
-    monitor-open: true
+    monitor-open: false
     heart-port: 9001

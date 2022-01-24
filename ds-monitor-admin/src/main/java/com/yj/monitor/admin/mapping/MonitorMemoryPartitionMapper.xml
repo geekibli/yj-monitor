@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorMemoryPartitionMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorMemoryPartition">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="partition_name" jdbcType="VARCHAR" property="partitionName" />
+    <result column="partition_type" jdbcType="VARCHAR" property="partitionType" />
+    <result column="manages" jdbcType="VARCHAR" property="manages" />
+    <result column="usage_committed" jdbcType="BIGINT" property="usageCommitted" />
+    <result column="usage_init" jdbcType="BIGINT" property="usageInit" />
+    <result column="usage_max" jdbcType="BIGINT" property="usageMax" />
+    <result column="usage_used" jdbcType="BIGINT" property="usageUsed" />
+    <result column="peak_usage_committed" jdbcType="BIGINT" property="peakUsageCommitted" />
+    <result column="peak_usage_init" jdbcType="BIGINT" property="peakUsageInit" />
+    <result column="peak_usage_max" jdbcType="BIGINT" property="peakUsageMax" />
+    <result column="peak_usage_used" jdbcType="BIGINT" property="peakUsageUsed" />
+    <result column="collection_usage_committed" jdbcType="BIGINT" property="collectionUsageCommitted" />
+    <result column="collection_usage_max" jdbcType="BIGINT" property="collectionUsageMax" />
+    <result column="collection_usage_init" jdbcType="BIGINT" property="collectionUsageInit" />
+    <result column="collection_usage_used" jdbcType="BIGINT" property="collectionUsageUsed" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, partition_name, partition_type, manages, 
+    usage_committed, usage_init, usage_max, usage_used, peak_usage_committed, peak_usage_init, 
+    peak_usage_max, peak_usage_used, collection_usage_committed, collection_usage_max, 
+    collection_usage_init, collection_usage_used, create_time, update_time, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_memory_partition
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_memory_partition
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorMemoryPartition">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_memory_partition (batch_id, client_address, client_id, 
+      partition_name, partition_type, manages, 
+      usage_committed, usage_init, usage_max, 
+      usage_used, peak_usage_committed, peak_usage_init, 
+      peak_usage_max, peak_usage_used, collection_usage_committed, 
+      collection_usage_max, collection_usage_init, 
+      collection_usage_used, create_time, update_time, 
+      is_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{partitionName,jdbcType=VARCHAR}, #{partitionType,jdbcType=VARCHAR}, #{manages,jdbcType=VARCHAR}, 
+      #{usageCommitted,jdbcType=BIGINT}, #{usageInit,jdbcType=BIGINT}, #{usageMax,jdbcType=BIGINT}, 
+      #{usageUsed,jdbcType=BIGINT}, #{peakUsageCommitted,jdbcType=BIGINT}, #{peakUsageInit,jdbcType=BIGINT}, 
+      #{peakUsageMax,jdbcType=BIGINT}, #{peakUsageUsed,jdbcType=BIGINT}, #{collectionUsageCommitted,jdbcType=BIGINT}, 
+      #{collectionUsageMax,jdbcType=BIGINT}, #{collectionUsageInit,jdbcType=BIGINT}, 
+      #{collectionUsageUsed,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorMemoryPartition">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_memory_partition
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="partitionName != null">
+        partition_name,
+      </if>
+      <if test="partitionType != null">
+        partition_type,
+      </if>
+      <if test="manages != null">
+        manages,
+      </if>
+      <if test="usageCommitted != null">
+        usage_committed,
+      </if>
+      <if test="usageInit != null">
+        usage_init,
+      </if>
+      <if test="usageMax != null">
+        usage_max,
+      </if>
+      <if test="usageUsed != null">
+        usage_used,
+      </if>
+      <if test="peakUsageCommitted != null">
+        peak_usage_committed,
+      </if>
+      <if test="peakUsageInit != null">
+        peak_usage_init,
+      </if>
+      <if test="peakUsageMax != null">
+        peak_usage_max,
+      </if>
+      <if test="peakUsageUsed != null">
+        peak_usage_used,
+      </if>
+      <if test="collectionUsageCommitted != null">
+        collection_usage_committed,
+      </if>
+      <if test="collectionUsageMax != null">
+        collection_usage_max,
+      </if>
+      <if test="collectionUsageInit != null">
+        collection_usage_init,
+      </if>
+      <if test="collectionUsageUsed != null">
+        collection_usage_used,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="partitionName != null">
+        #{partitionName,jdbcType=VARCHAR},
+      </if>
+      <if test="partitionType != null">
+        #{partitionType,jdbcType=VARCHAR},
+      </if>
+      <if test="manages != null">
+        #{manages,jdbcType=VARCHAR},
+      </if>
+      <if test="usageCommitted != null">
+        #{usageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="usageInit != null">
+        #{usageInit,jdbcType=BIGINT},
+      </if>
+      <if test="usageMax != null">
+        #{usageMax,jdbcType=BIGINT},
+      </if>
+      <if test="usageUsed != null">
+        #{usageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageCommitted != null">
+        #{peakUsageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageInit != null">
+        #{peakUsageInit,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageMax != null">
+        #{peakUsageMax,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageUsed != null">
+        #{peakUsageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageCommitted != null">
+        #{collectionUsageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageMax != null">
+        #{collectionUsageMax,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageInit != null">
+        #{collectionUsageInit,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageUsed != null">
+        #{collectionUsageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorMemoryPartition">
+    update monitor_memory_partition
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="partitionName != null">
+        partition_name = #{partitionName,jdbcType=VARCHAR},
+      </if>
+      <if test="partitionType != null">
+        partition_type = #{partitionType,jdbcType=VARCHAR},
+      </if>
+      <if test="manages != null">
+        manages = #{manages,jdbcType=VARCHAR},
+      </if>
+      <if test="usageCommitted != null">
+        usage_committed = #{usageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="usageInit != null">
+        usage_init = #{usageInit,jdbcType=BIGINT},
+      </if>
+      <if test="usageMax != null">
+        usage_max = #{usageMax,jdbcType=BIGINT},
+      </if>
+      <if test="usageUsed != null">
+        usage_used = #{usageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageCommitted != null">
+        peak_usage_committed = #{peakUsageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageInit != null">
+        peak_usage_init = #{peakUsageInit,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageMax != null">
+        peak_usage_max = #{peakUsageMax,jdbcType=BIGINT},
+      </if>
+      <if test="peakUsageUsed != null">
+        peak_usage_used = #{peakUsageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageCommitted != null">
+        collection_usage_committed = #{collectionUsageCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageMax != null">
+        collection_usage_max = #{collectionUsageMax,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageInit != null">
+        collection_usage_init = #{collectionUsageInit,jdbcType=BIGINT},
+      </if>
+      <if test="collectionUsageUsed != null">
+        collection_usage_used = #{collectionUsageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorMemoryPartition">
+    update monitor_memory_partition
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      partition_name = #{partitionName,jdbcType=VARCHAR},
+      partition_type = #{partitionType,jdbcType=VARCHAR},
+      manages = #{manages,jdbcType=VARCHAR},
+      usage_committed = #{usageCommitted,jdbcType=BIGINT},
+      usage_init = #{usageInit,jdbcType=BIGINT},
+      usage_max = #{usageMax,jdbcType=BIGINT},
+      usage_used = #{usageUsed,jdbcType=BIGINT},
+      peak_usage_committed = #{peakUsageCommitted,jdbcType=BIGINT},
+      peak_usage_init = #{peakUsageInit,jdbcType=BIGINT},
+      peak_usage_max = #{peakUsageMax,jdbcType=BIGINT},
+      peak_usage_used = #{peakUsageUsed,jdbcType=BIGINT},
+      collection_usage_committed = #{collectionUsageCommitted,jdbcType=BIGINT},
+      collection_usage_max = #{collectionUsageMax,jdbcType=BIGINT},
+      collection_usage_init = #{collectionUsageInit,jdbcType=BIGINT},
+      collection_usage_used = #{collectionUsageUsed,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

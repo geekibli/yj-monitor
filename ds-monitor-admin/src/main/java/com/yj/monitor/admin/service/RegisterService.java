@@ -31,9 +31,8 @@ public class RegisterService {
 
         ClientContainer.online(reqVO.getClientId(), client);
 
-//        if (1 == ClientContainer.onlineCount()) {
-//            logger.info("初始化定时任务...");
-//            pullMonitorService.execute();
-//        }
+        if (1 == ClientContainer.onlineCount()) {
+            pullMonitorService.execute();
+        }
     }
 }

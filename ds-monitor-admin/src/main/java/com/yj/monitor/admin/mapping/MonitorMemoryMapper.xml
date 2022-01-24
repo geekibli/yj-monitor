@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorMemoryMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorMemory">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="heap_committed" jdbcType="BIGINT" property="heapCommitted" />
+    <result column="heap_used" jdbcType="BIGINT" property="heapUsed" />
+    <result column="heap_init" jdbcType="BIGINT" property="heapInit" />
+    <result column="heap_max" jdbcType="BIGINT" property="heapMax" />
+    <result column="non_heap_committed" jdbcType="BIGINT" property="nonHeapCommitted" />
+    <result column="non_heap_init" jdbcType="BIGINT" property="nonHeapInit" />
+    <result column="non_heap_max" jdbcType="BIGINT" property="nonHeapMax" />
+    <result column="non_heap_used" jdbcType="BIGINT" property="nonHeapUsed" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, heap_committed, heap_used, heap_init, heap_max, 
+    non_heap_committed, non_heap_init, non_heap_max, non_heap_used, create_time, update_time, 
+    is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_memory
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_memory
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorMemory">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_memory (batch_id, client_address, client_id, 
+      heap_committed, heap_used, heap_init, 
+      heap_max, non_heap_committed, non_heap_init, 
+      non_heap_max, non_heap_used, create_time, 
+      update_time, is_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{heapCommitted,jdbcType=BIGINT}, #{heapUsed,jdbcType=BIGINT}, #{heapInit,jdbcType=BIGINT}, 
+      #{heapMax,jdbcType=BIGINT}, #{nonHeapCommitted,jdbcType=BIGINT}, #{nonHeapInit,jdbcType=BIGINT}, 
+      #{nonHeapMax,jdbcType=BIGINT}, #{nonHeapUsed,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorMemory">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_memory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="heapCommitted != null">
+        heap_committed,
+      </if>
+      <if test="heapUsed != null">
+        heap_used,
+      </if>
+      <if test="heapInit != null">
+        heap_init,
+      </if>
+      <if test="heapMax != null">
+        heap_max,
+      </if>
+      <if test="nonHeapCommitted != null">
+        non_heap_committed,
+      </if>
+      <if test="nonHeapInit != null">
+        non_heap_init,
+      </if>
+      <if test="nonHeapMax != null">
+        non_heap_max,
+      </if>
+      <if test="nonHeapUsed != null">
+        non_heap_used,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="heapCommitted != null">
+        #{heapCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="heapUsed != null">
+        #{heapUsed,jdbcType=BIGINT},
+      </if>
+      <if test="heapInit != null">
+        #{heapInit,jdbcType=BIGINT},
+      </if>
+      <if test="heapMax != null">
+        #{heapMax,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapCommitted != null">
+        #{nonHeapCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapInit != null">
+        #{nonHeapInit,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapMax != null">
+        #{nonHeapMax,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapUsed != null">
+        #{nonHeapUsed,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorMemory">
+    update monitor_memory
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="heapCommitted != null">
+        heap_committed = #{heapCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="heapUsed != null">
+        heap_used = #{heapUsed,jdbcType=BIGINT},
+      </if>
+      <if test="heapInit != null">
+        heap_init = #{heapInit,jdbcType=BIGINT},
+      </if>
+      <if test="heapMax != null">
+        heap_max = #{heapMax,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapCommitted != null">
+        non_heap_committed = #{nonHeapCommitted,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapInit != null">
+        non_heap_init = #{nonHeapInit,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapMax != null">
+        non_heap_max = #{nonHeapMax,jdbcType=BIGINT},
+      </if>
+      <if test="nonHeapUsed != null">
+        non_heap_used = #{nonHeapUsed,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorMemory">
+    update monitor_memory
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      heap_committed = #{heapCommitted,jdbcType=BIGINT},
+      heap_used = #{heapUsed,jdbcType=BIGINT},
+      heap_init = #{heapInit,jdbcType=BIGINT},
+      heap_max = #{heapMax,jdbcType=BIGINT},
+      non_heap_committed = #{nonHeapCommitted,jdbcType=BIGINT},
+      non_heap_init = #{nonHeapInit,jdbcType=BIGINT},
+      non_heap_max = #{nonHeapMax,jdbcType=BIGINT},
+      non_heap_used = #{nonHeapUsed,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

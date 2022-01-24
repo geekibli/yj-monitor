@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorClassLoadMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorClassLoad">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="loaded_class_count" jdbcType="BIGINT" property="loadedClassCount" />
+    <result column="unloaded_class_count" jdbcType="BIGINT" property="unloadedClassCount" />
+    <result column="total_loaded_class_count" jdbcType="BIGINT" property="totalLoadedClassCount" />
+    <result column="verbose" jdbcType="VARCHAR" property="verbose" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="id_deleted" jdbcType="TINYINT" property="idDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, loaded_class_count, unloaded_class_count, 
+    total_loaded_class_count, verbose, create_time, update_time, id_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_classload
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_classload
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorClassLoad">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_classload (batch_id, client_address, client_id, 
+      loaded_class_count, unloaded_class_count, total_loaded_class_count, 
+      verbose, create_time, update_time, 
+      id_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{loadedClassCount,jdbcType=BIGINT}, #{unloadedClassCount,jdbcType=BIGINT}, #{totalLoadedClassCount,jdbcType=BIGINT}, 
+      #{verbose,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{idDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorClassLoad">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_classload
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="loadedClassCount != null">
+        loaded_class_count,
+      </if>
+      <if test="unloadedClassCount != null">
+        unloaded_class_count,
+      </if>
+      <if test="totalLoadedClassCount != null">
+        total_loaded_class_count,
+      </if>
+      <if test="verbose != null">
+        verbose,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="idDeleted != null">
+        id_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="loadedClassCount != null">
+        #{loadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="unloadedClassCount != null">
+        #{unloadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="totalLoadedClassCount != null">
+        #{totalLoadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="verbose != null">
+        #{verbose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idDeleted != null">
+        #{idDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorClassLoad">
+    update monitor_classload
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="loadedClassCount != null">
+        loaded_class_count = #{loadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="unloadedClassCount != null">
+        unloaded_class_count = #{unloadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="totalLoadedClassCount != null">
+        total_loaded_class_count = #{totalLoadedClassCount,jdbcType=BIGINT},
+      </if>
+      <if test="verbose != null">
+        verbose = #{verbose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idDeleted != null">
+        id_deleted = #{idDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorClassLoad">
+    update monitor_classload
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      loaded_class_count = #{loadedClassCount,jdbcType=BIGINT},
+      unloaded_class_count = #{unloadedClassCount,jdbcType=BIGINT},
+      total_loaded_class_count = #{totalLoadedClassCount,jdbcType=BIGINT},
+      verbose = #{verbose,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      id_deleted = #{idDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

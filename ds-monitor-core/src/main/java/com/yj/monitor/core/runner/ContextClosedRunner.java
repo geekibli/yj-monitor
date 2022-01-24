@@ -29,6 +29,9 @@ public class ContextClosedRunner {
 
     @EventListener(classes = {ContextClosedEvent.class})
     public void onMonitorClientClosed(@NonNull ApplicationEvent event) throws InterruptedException {
+        if (!monitorConfig.getMonitorOpen()) {
+            return;
+        }
         Thread thread = new Thread(() -> {
             HashMap<String, Object> param = new HashMap<>();
             param.put("clientId", monitorConfig.getClientId());
@@ -39,7 +42,6 @@ public class ContextClosedRunner {
         thread.join();
         logger.info(".....");
     }
-
 
 
     public static void main(String[] args) {

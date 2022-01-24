@@ -26,12 +26,16 @@ public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String s) {
-        if (s.startsWith(RemoteAPI.HEART_BEAT_MSG)) {
-            ClientContainer.markAddress(ctx.channel().remoteAddress().toString(), s.replace(RemoteAPI.HEART_BEAT_MSG, ""));
-            ctx.channel().writeAndFlush(RemoteAPI.HEART_BEAT_OK);
-            return;
+        try {
+            if (s.startsWith(RemoteAPI.HEART_BEAT_MSG)) {
+                ClientContainer.markAddress(ctx.channel().remoteAddress().toString(), s.replace(RemoteAPI.HEART_BEAT_MSG, ""));
+                ctx.channel().writeAndFlush(RemoteAPI.HEART_BEAT_OK);
+                return;
+            }
+            logger.info(" read msg :{}", s);
+        } catch (Exception e) {
+            logger.info("channel read error", e);
         }
-        logger.info(" read msg :{}", s);
     }
 
     @Override

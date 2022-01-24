@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorThreadMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorThread">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="total_started_count" jdbcType="BIGINT" property="totalStartedCount" />
+    <result column="deadlock_threads" jdbcType="VARCHAR" property="deadlockThreads" />
+    <result column="peak_count" jdbcType="BIGINT" property="peakCount" />
+    <result column="thread_count" jdbcType="BIGINT" property="threadCount" />
+    <result column="daemon_count" jdbcType="BIGINT" property="daemonCount" />
+    <result column="create_timestamp" jdbcType="TIMESTAMP" property="createTimestamp" />
+    <result column="update_timestamp" jdbcType="TIMESTAMP" property="updateTimestamp" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, total_started_count, deadlock_threads, peak_count, 
+    thread_count, daemon_count, create_timestamp, update_timestamp, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_thread
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_thread
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorThread">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_thread (batch_id, client_address, client_id, 
+      total_started_count, deadlock_threads, peak_count, 
+      thread_count, daemon_count, create_timestamp, 
+      update_timestamp, is_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{totalStartedCount,jdbcType=BIGINT}, #{deadlockThreads,jdbcType=VARCHAR}, #{peakCount,jdbcType=BIGINT}, 
+      #{threadCount,jdbcType=BIGINT}, #{daemonCount,jdbcType=BIGINT}, #{createTimestamp,jdbcType=TIMESTAMP}, 
+      #{updateTimestamp,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorThread">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_thread
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="totalStartedCount != null">
+        total_started_count,
+      </if>
+      <if test="deadlockThreads != null">
+        deadlock_threads,
+      </if>
+      <if test="peakCount != null">
+        peak_count,
+      </if>
+      <if test="threadCount != null">
+        thread_count,
+      </if>
+      <if test="daemonCount != null">
+        daemon_count,
+      </if>
+      <if test="createTimestamp != null">
+        create_timestamp,
+      </if>
+      <if test="updateTimestamp != null">
+        update_timestamp,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="totalStartedCount != null">
+        #{totalStartedCount,jdbcType=BIGINT},
+      </if>
+      <if test="deadlockThreads != null">
+        #{deadlockThreads,jdbcType=VARCHAR},
+      </if>
+      <if test="peakCount != null">
+        #{peakCount,jdbcType=BIGINT},
+      </if>
+      <if test="threadCount != null">
+        #{threadCount,jdbcType=BIGINT},
+      </if>
+      <if test="daemonCount != null">
+        #{daemonCount,jdbcType=BIGINT},
+      </if>
+      <if test="createTimestamp != null">
+        #{createTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTimestamp != null">
+        #{updateTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorThread">
+    update monitor_thread
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="totalStartedCount != null">
+        total_started_count = #{totalStartedCount,jdbcType=BIGINT},
+      </if>
+      <if test="deadlockThreads != null">
+        deadlock_threads = #{deadlockThreads,jdbcType=VARCHAR},
+      </if>
+      <if test="peakCount != null">
+        peak_count = #{peakCount,jdbcType=BIGINT},
+      </if>
+      <if test="threadCount != null">
+        thread_count = #{threadCount,jdbcType=BIGINT},
+      </if>
+      <if test="daemonCount != null">
+        daemon_count = #{daemonCount,jdbcType=BIGINT},
+      </if>
+      <if test="createTimestamp != null">
+        create_timestamp = #{createTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTimestamp != null">
+        update_timestamp = #{updateTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorThread">
+    update monitor_thread
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      total_started_count = #{totalStartedCount,jdbcType=BIGINT},
+      deadlock_threads = #{deadlockThreads,jdbcType=VARCHAR},
+      peak_count = #{peakCount,jdbcType=BIGINT},
+      thread_count = #{threadCount,jdbcType=BIGINT},
+      daemon_count = #{daemonCount,jdbcType=BIGINT},
+      create_timestamp = #{createTimestamp,jdbcType=TIMESTAMP},
+      update_timestamp = #{updateTimestamp,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

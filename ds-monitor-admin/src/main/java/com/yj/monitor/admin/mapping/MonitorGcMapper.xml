@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorGcMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorGc">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="ps_marksweep_collection_time" jdbcType="BIGINT" property="psMarksweepCollectionTime" />
+    <result column="ps_marksweep_collection_count" jdbcType="BIGINT" property="psMarksweepCollectionCount" />
+    <result column="ps_scavenge_collection_time" jdbcType="BIGINT" property="psScavengeCollectionTime" />
+    <result column="ps_scavenge_collection_count" jdbcType="BIGINT" property="psScavengeCollectionCount" />
+    <result column="live_data_size" jdbcType="BIGINT" property="liveDataSize" />
+    <result column="max_data_size" jdbcType="BIGINT" property="maxDataSize" />
+    <result column="memory_allocated_count" jdbcType="BIGINT" property="memoryAllocatedCount" />
+    <result column="memory_promoted_count" jdbcType="BIGINT" property="memoryPromotedCount" />
+    <result column="pause_count" jdbcType="BIGINT" property="pauseCount" />
+    <result column="pause_total_time" jdbcType="DOUBLE" property="pauseTotalTime" />
+    <result column="pause_max" jdbcType="BIGINT" property="pauseMax" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, ps_marksweep_collection_time, ps_marksweep_collection_count, 
+    ps_scavenge_collection_time, ps_scavenge_collection_count, live_data_size, max_data_size, 
+    memory_allocated_count, memory_promoted_count, pause_count, pause_total_time, pause_max, 
+    create_time, update_time, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_gc
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_gc
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorGc">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_gc (batch_id, client_address, client_id, 
+      ps_marksweep_collection_time, ps_marksweep_collection_count, 
+      ps_scavenge_collection_time, ps_scavenge_collection_count, 
+      live_data_size, max_data_size, memory_allocated_count, 
+      memory_promoted_count, pause_count, pause_total_time, 
+      pause_max, create_time, update_time, 
+      is_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{psMarksweepCollectionTime,jdbcType=BIGINT}, #{psMarksweepCollectionCount,jdbcType=BIGINT}, 
+      #{psScavengeCollectionTime,jdbcType=BIGINT}, #{psScavengeCollectionCount,jdbcType=BIGINT}, 
+      #{liveDataSize,jdbcType=BIGINT}, #{maxDataSize,jdbcType=BIGINT}, #{memoryAllocatedCount,jdbcType=BIGINT}, 
+      #{memoryPromotedCount,jdbcType=BIGINT}, #{pauseCount,jdbcType=BIGINT}, #{pauseTotalTime,jdbcType=DOUBLE}, 
+      #{pauseMax,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorGc">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_gc
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="psMarksweepCollectionTime != null">
+        ps_marksweep_collection_time,
+      </if>
+      <if test="psMarksweepCollectionCount != null">
+        ps_marksweep_collection_count,
+      </if>
+      <if test="psScavengeCollectionTime != null">
+        ps_scavenge_collection_time,
+      </if>
+      <if test="psScavengeCollectionCount != null">
+        ps_scavenge_collection_count,
+      </if>
+      <if test="liveDataSize != null">
+        live_data_size,
+      </if>
+      <if test="maxDataSize != null">
+        max_data_size,
+      </if>
+      <if test="memoryAllocatedCount != null">
+        memory_allocated_count,
+      </if>
+      <if test="memoryPromotedCount != null">
+        memory_promoted_count,
+      </if>
+      <if test="pauseCount != null">
+        pause_count,
+      </if>
+      <if test="pauseTotalTime != null">
+        pause_total_time,
+      </if>
+      <if test="pauseMax != null">
+        pause_max,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="psMarksweepCollectionTime != null">
+        #{psMarksweepCollectionTime,jdbcType=BIGINT},
+      </if>
+      <if test="psMarksweepCollectionCount != null">
+        #{psMarksweepCollectionCount,jdbcType=BIGINT},
+      </if>
+      <if test="psScavengeCollectionTime != null">
+        #{psScavengeCollectionTime,jdbcType=BIGINT},
+      </if>
+      <if test="psScavengeCollectionCount != null">
+        #{psScavengeCollectionCount,jdbcType=BIGINT},
+      </if>
+      <if test="liveDataSize != null">
+        #{liveDataSize,jdbcType=BIGINT},
+      </if>
+      <if test="maxDataSize != null">
+        #{maxDataSize,jdbcType=BIGINT},
+      </if>
+      <if test="memoryAllocatedCount != null">
+        #{memoryAllocatedCount,jdbcType=BIGINT},
+      </if>
+      <if test="memoryPromotedCount != null">
+        #{memoryPromotedCount,jdbcType=BIGINT},
+      </if>
+      <if test="pauseCount != null">
+        #{pauseCount,jdbcType=BIGINT},
+      </if>
+      <if test="pauseTotalTime != null">
+        #{pauseTotalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="pauseMax != null">
+        #{pauseMax,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorGc">
+    update monitor_gc
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="psMarksweepCollectionTime != null">
+        ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=BIGINT},
+      </if>
+      <if test="psMarksweepCollectionCount != null">
+        ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=BIGINT},
+      </if>
+      <if test="psScavengeCollectionTime != null">
+        ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=BIGINT},
+      </if>
+      <if test="psScavengeCollectionCount != null">
+        ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=BIGINT},
+      </if>
+      <if test="liveDataSize != null">
+        live_data_size = #{liveDataSize,jdbcType=BIGINT},
+      </if>
+      <if test="maxDataSize != null">
+        max_data_size = #{maxDataSize,jdbcType=BIGINT},
+      </if>
+      <if test="memoryAllocatedCount != null">
+        memory_allocated_count = #{memoryAllocatedCount,jdbcType=BIGINT},
+      </if>
+      <if test="memoryPromotedCount != null">
+        memory_promoted_count = #{memoryPromotedCount,jdbcType=BIGINT},
+      </if>
+      <if test="pauseCount != null">
+        pause_count = #{pauseCount,jdbcType=BIGINT},
+      </if>
+      <if test="pauseTotalTime != null">
+        pause_total_time = #{pauseTotalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="pauseMax != null">
+        pause_max = #{pauseMax,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorGc">
+    update monitor_gc
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=BIGINT},
+      ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=BIGINT},
+      ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=BIGINT},
+      ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=BIGINT},
+      live_data_size = #{liveDataSize,jdbcType=BIGINT},
+      max_data_size = #{maxDataSize,jdbcType=BIGINT},
+      memory_allocated_count = #{memoryAllocatedCount,jdbcType=BIGINT},
+      memory_promoted_count = #{memoryPromotedCount,jdbcType=BIGINT},
+      pause_count = #{pauseCount,jdbcType=BIGINT},
+      pause_total_time = #{pauseTotalTime,jdbcType=DOUBLE},
+      pause_max = #{pauseMax,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

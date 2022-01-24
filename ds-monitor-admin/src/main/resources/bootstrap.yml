@@ -5,13 +5,27 @@ server:
       charset: UTF-8
       force-response: true
 spring:
+  datasource:
+    url: jdbc:mysql://47.105.44.37:13306/yj_monitor?useUnicode=true&autoReconnect=true&tinyInt1isBit=false&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: yj_db_master
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 50
+      idle-timeout: 30000
+      pool-name: HikariCP
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
   application:
     name: ds-minitor-admin
   profiles:
     active: local
   main:
     allow-bean-definition-overriding: true
-
 yj:
   monitor:
     heart:

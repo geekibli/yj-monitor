@@ -19,13 +19,11 @@ public interface MonitorMethods {
     Method OPERATOR_SYSTEM = new Method("com.yj.monitor.core.handler.MonitorHandler", "getOperatingSystemInfo", "操作系统参数");
     Method SYSTEM_PROFILE = new Method("com.yj.monitor.core.handler.MonitorHandler", "getSystemProperties", "系统变量");
     Method CLASSLOADER = new Method("com.yj.monitor.core.handler.MonitorHandler", "getClassLoader", "类加载信息");
+    Method MEMORY_PARTITION = new Method("com.yj.monitor.core.handler.MonitorHandler", "getMemoryPartition", "内存分区信息");
 
     List<Method> MONITOR_METHODS = Lists.newArrayList(
             MEMORY, GC, RUNTIME, THREAD, OPERATOR_SYSTEM, SYSTEM_PROFILE, CLASSLOADER
     );
-
-
-
 
 
 }

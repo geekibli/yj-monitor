@@ -2,18 +2,21 @@ package com.yj.monitor.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.yj.monitor.api.domain.MemoryPartition;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.management.*;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author gaolei
  * @Date 2022/1/19 下午2:22
  * @Version 1.0
  */
+@Component
 public class MonitorHandler {
 
     public static Map<String, String> getRuntimeInfo() {
@@ -58,16 +61,16 @@ public class MonitorHandler {
         MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         MemoryUsage heap = mxb.getHeapMemoryUsage();
-        map.put("heap.max", formatSize(heap.getMax()));
-        map.put("heap.committed", formatSize(heap.getCommitted()));
-        map.put("heap.used", formatSize(heap.getUsed()));
-        map.put("heap.init", formatSize(heap.getInit()));
+        map.put("heap.max", heap.getMax() + "");
+        map.put("heap.committed", heap.getCommitted() + "");
+        map.put("heap.used", heap.getUsed() + "");
+        map.put("heap.init", heap.getInit() + "");
 
         MemoryUsage nonHeap = mxb.getNonHeapMemoryUsage();
-        map.put("nonHeap.init", formatSize(nonHeap.getInit()));
-        map.put("nonHeap.used", formatSize(nonHeap.getUsed()));
-        map.put("nonHeap.committed", formatSize(nonHeap.getCommitted()));
-        map.put("nonHeap.max", formatSize(nonHeap.getMax()));
+        map.put("nonHeap.init", nonHeap.getInit() + "");
+        map.put("nonHeap.used", nonHeap.getUsed() + "");
+        map.put("nonHeap.committed", nonHeap.getCommitted() + "");
+        map.put("nonHeap.max", nonHeap.getMax() + "");
         return map;
     }
 
@@ -98,6 +101,7 @@ public class MonitorHandler {
         map.put("TotalLoadedClassCount", classLoading.getTotalLoadedClassCount() + "");
         map.put("UnloadedClassCount", classLoading.getUnloadedClassCount() + "");
         map.put("Verbose", classLoading.isVerbose() + "");
+        System.err.println("  sss " + JSON.toJSONString(map));
         return map;
     }
 
@@ -147,4 +151,64 @@ public class MonitorHandler {
         }
         return hrSize;
     }
+
+    public static List<MemoryPartition> getMemoryPartition() { // 获取所有内存池MXBean列表，并遍历
+        List<MemoryPoolMXBean> mxBeans = ManagementFactory.getMemoryPoolMXBeans();
+        if (CollectionUtils.isEmpty(mxBeans)) {
+            return new ArrayList<>();
+        }
+
+        return mxBeans.stream()
+                .map(mxBean -> {
+                    MemoryPartition partition = new MemoryPartition();
+                    // 内存分区名
+                    partition.setName(mxBean.getName());
+                    // 内存管理器名称
+                    String[] memoryManagerNames = mxBean.getMemoryManagerNames();
+                    partition.setManages(joinString(memoryManagerNames));
+                    // 内存分区类型
+                    partition.setPartitionType(mxBean.getType().toString());
+                    // 内存使用情况
+                    MemoryUsage usage = mxBean.getUsage();
+                    if (null != usage) {
+                        partition.setUsageCommitted(usage.getCommitted());
+                        partition.setUsageInit(usage.getInit());
+                        partition.setUsageMax(usage.getCommitted());
+                        partition.setUsageUsed(usage.getUsed());
+                    }
+
+                    // 内存使用峰值情况
+                    MemoryUsage peakUsage = mxBean.getPeakUsage();
+                    if (null != peakUsage) {
+                        partition.setPeakUsageCommitted(peakUsage.getCommitted());
+                        partition.setPeakUsageInit(peakUsage.getInit());
+                        partition.setPeakUsageMax(peakUsage.getMax());
+                        partition.setPeakUsageUsed(peakUsage.getUsed());
+                    }
+
+                    // 内存回收
+                    MemoryUsage collectionUsage = mxBean.getCollectionUsage();
+                    if (null != collectionUsage) {
+                        partition.setCollectionUsageCommitted(collectionUsage.getCommitted());
+                        partition.setCollectionUsageInit(collectionUsage.getInit());
+                        partition.setCollectionUsageMax(collectionUsage.getMax());
+                        partition.setCollectionUsageUsed(collectionUsage.getUsed());
+                    }
+
+                    return partition;
+                }).collect(Collectors.toList());
+    }
+
+
+    private static String joinString(String[] vars) {
+        if (1 == vars.length) {
+            return vars[0];
+        }
+        StringJoiner joiner = new StringJoiner(",");
+        for (String var : vars) {
+            joiner.add(var);
+        }
+        return joiner.toString();
+    }
+
 }
