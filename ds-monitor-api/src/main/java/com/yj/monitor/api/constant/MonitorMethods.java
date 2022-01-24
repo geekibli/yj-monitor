@@ -1,9 +1,7 @@
 package com.yj.monitor.api.constant;
 
-import com.google.common.collect.Lists;
 import com.yj.monitor.api.domain.Method;
 
-import java.util.List;
 
 /**
  * @Author gaolei
@@ -21,9 +19,12 @@ public interface MonitorMethods {
     Method CLASSLOADER = new Method("com.yj.monitor.core.handler.MonitorHandler", "getClassLoader", "类加载信息");
     Method MEMORY_PARTITION = new Method("com.yj.monitor.core.handler.MonitorHandler", "getMemoryPartition", "内存分区信息");
 
-    List<Method> MONITOR_METHODS = Lists.newArrayList(
-            MEMORY, GC, RUNTIME, THREAD, OPERATOR_SYSTEM, SYSTEM_PROFILE, CLASSLOADER
-    );
+
+    Method JVM_GC_LIVE_DATA_SIZE = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcLiveDataSize", "Size of long-lived heap memory pool after reclamation");
+    Method JVM_GC_MAX_DATA_SIZE = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcMaxDataSize", "Max size of long-lived heap memory pool");
+    Method JVM_GC_MEMORY_ALLOCATED = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcMemoryAllocated", "Incremented for an increase in the size of the (young) heap memory pool after one GC to before the next");
+    Method JVM_GC_MEMORY_PROMOTED = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcMemoryPromoted", "Count of positive increases in the size of the old generation memory pool before GC to after GC");
+    Method JVM_GC_PAUSE = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcPause", "Time spent in GC pause");
 
 
 }

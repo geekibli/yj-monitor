@@ -211,4 +211,8 @@ public class MonitorHandler {
         return joiner.toString();
     }
 
+    public static void main(String[] args) {
+        System.err.println(getGcInfo());
+    }
+
 }

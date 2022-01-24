@@ -1,7 +1,7 @@
 package com.yj.monitor.admin.service;
 
 import com.yj.monitor.admin.config.AdminMonitorConfig;
-import com.yj.monitor.admin.doman.ClientContainer;
+import com.yj.monitor.admin.domain.ClientContainer;
 import com.yj.monitor.admin.handler.AdminHeartBeatHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

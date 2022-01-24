@@ -46,14 +46,4 @@ public class RemoteInvoke {
         }
     }
 
-
-
-    public static void main(String[] args) {
-        RemoteMonitorReqVO reqVO = new RemoteMonitorReqVO();
-        reqVO.setClassName(MonitorMethods.RUNTIME.getcName());
-        reqVO.setMethod(MonitorMethods.RUNTIME.getmName());
-        reqVO.setParams(new Object[0]);
-        System.err.println(JSON.toJSONString(new RemoteInvoke().invoke(reqVO)));
-    }
-
 }

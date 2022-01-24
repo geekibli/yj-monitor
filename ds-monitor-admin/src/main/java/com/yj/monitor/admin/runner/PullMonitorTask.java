@@ -2,7 +2,7 @@ package com.yj.monitor.admin.runner;
 
 import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEventProducer;
-import com.yj.monitor.admin.doman.ClientContainer;
+import com.yj.monitor.admin.domain.ClientContainer;
 import com.yj.monitor.api.domain.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

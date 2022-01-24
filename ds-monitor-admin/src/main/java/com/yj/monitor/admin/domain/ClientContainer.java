@@ -1,4 +1,4 @@
-package com.yj.monitor.admin.doman;
+package com.yj.monitor.admin.domain;
 
 import com.yj.monitor.api.domain.Client;
 import org.apache.commons.lang3.StringUtils;
@@ -68,11 +68,11 @@ public class ClientContainer {
         if (StringUtils.isBlank(clientId)) {
             return;
         }
-        CLIENT_CONTAINER.remove(clientId);
+        removeByClient(clientId);
     }
 
     public static void removeByClient(String clientId) {
-        CLIENT_CONTAINER.remove(clientId);
+        offline(clientId);
     }
 
     public static String findClientId(String address) {
@@ -84,7 +84,6 @@ public class ClientContainer {
         }
         return null;
     }
-
 
 
 }

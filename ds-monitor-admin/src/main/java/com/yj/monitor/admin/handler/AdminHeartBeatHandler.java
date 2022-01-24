@@ -1,7 +1,7 @@
 package com.yj.monitor.admin.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.yj.monitor.admin.doman.ClientContainer;
+import com.yj.monitor.admin.domain.ClientContainer;
 import com.yj.monitor.api.constant.RemoteAPI;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

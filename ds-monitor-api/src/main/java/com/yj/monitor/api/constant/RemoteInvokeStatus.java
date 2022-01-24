@@ -14,5 +14,4 @@ public interface RemoteInvokeStatus {
     int NOT_FOUND = 404;
     int INTERNET_ERROR = 500;
 
-
 }

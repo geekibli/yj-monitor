@@ -2,7 +2,7 @@ package com.yj.monitor.admin.controller;
 
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;
-import com.yj.monitor.admin.doman.ClientContainer;
+import com.yj.monitor.admin.domain.ClientContainer;
 import com.yj.monitor.admin.handler.AuthHandler;
 import com.yj.monitor.admin.service.RegisterService;
 import com.yj.monitor.api.constant.RemoteAPI;
