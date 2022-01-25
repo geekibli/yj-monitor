@@ -6,7 +6,7 @@ server:
       force-response: true
 spring:
   datasource:
-    url: jdbc:mysql://47.105.44.37:13306/yj_monitor?useUnicode=true&autoReconnect=true&tinyInt1isBit=false&allowMultiQueries=true
+    url: jdbc:mysql://47.105.44.37:13306/yj_monitor?useUnicode=true&autoReconnect=true&tinyInt1isBit=false&allowMultiQueries=true&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: yj_db_master

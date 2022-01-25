@@ -1,6 +1,5 @@
 package com.yj.monitor.admin.disruptor;
 
-import cn.hutool.core.util.IdUtil;
 import com.lmax.disruptor.EventFactory;
 
 /**
@@ -13,7 +12,7 @@ public class MonitorEventFactory implements EventFactory<MonitorEvent> {
     @Override
     public MonitorEvent newInstance() {
         MonitorEvent event = new MonitorEvent();
-        event.setBatchId(IdUtil.getSnowflake().nextId());
+//        event.setBatchId(IdUtil.getSnowflake().nextId());
         return event;
     }
 

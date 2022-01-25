@@ -23,7 +23,7 @@ public class ClientHeartBeatHandler extends SimpleChannelInboundHandler<String> 
             ctx.channel().writeAndFlush(RemoteAPI.HEART_BEAT_OK);
             return;
         }
-        logger.info(" read msg :{}", s);
+        logger.info("heart beat : {}", s);
     }
 
 

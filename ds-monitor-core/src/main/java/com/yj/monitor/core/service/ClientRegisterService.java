@@ -1,5 +1,7 @@
 package com.yj.monitor.core.service;
 
+import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
@@ -47,12 +49,12 @@ public class ClientRegisterService {
         }
 
         try {
-            HttpResponse execute = HttpUtil.createPost(monitorConfig.getAdminUrl() + RemoteAPI.register2admin)
-                    .header("Content-Type", "application/json")
+            HttpResponse execute = HttpUtil.createPost(monitorConfig.getAdminUrl() + RemoteAPI.REGISTER_2_ADMIN)
+                    .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                     .body(JSON.toJSONString(genRegisterReq()))
                     .execute();
 
-            if (RemoteAPI.register2adminRsp.equals(execute.body())) {
+            if (RemoteAPI.REGISTER_2_ADMIN_RSP.equals(execute.body())) {
                 logger.info("Monitor register to admin success!");
                 clientHeartService.sendHeart(monitorConfig.getAdminConfig().getHost(), monitorConfig.getHeartPort());
                 return;

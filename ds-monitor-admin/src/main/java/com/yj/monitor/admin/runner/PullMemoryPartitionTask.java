@@ -1,17 +1,25 @@
 package com.yj.monitor.admin.runner;
 
+import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorMemoryPartition;
 import com.yj.monitor.api.constant.MonitorMethods;
+import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.api.domain.MemoryPartition;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * @Author gaolei
@@ -22,7 +30,7 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
 
     private final Logger logger = LoggerFactory.getLogger(PullMemoryPartitionTask.class);
 
-    private MonitorEvent monitorEvent;
+    private final MonitorEvent monitorEvent;
 
     public PullMemoryPartitionTask(MonitorEvent monitorEvent) {
         this.monitorEvent = monitorEvent;
@@ -36,13 +44,34 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
         }
 
         HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
-                .header("Content-Type", "application/json")
+                .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.MEMORY_PARTITION.getcName(), MonitorMethods.MEMORY_PARTITION.getmName(), new Object[0])))
                 .execute();
-        logger.info("classload {}", response.body());
+
+        JSONObject bodyJson = JSON.parseObject(response.body());
+        String data = bodyJson.getString("data");
+        List<MemoryPartition> partitions = new ArrayList<>(JSON.parseArray(data, MemoryPartition.class));
+
+        return partitions.stream()
+                .map(partition -> {
+                    MonitorMemoryPartition memoryPartition = new MonitorMemoryPartition();
+                    memoryPartition.setBatchId(monitorEvent.getBatchId());
+                    memoryPartition.setClientAddress(monitorEvent.getClient().getAddress());
+                    memoryPartition.setClientId(monitorEvent.getClient().getClientId());
+                    BeanUtils.copyProperties(partition, memoryPartition);
+                    return memoryPartition;
+                }).collect(Collectors.toList());
+    }
 
 
-        return null;
-
+    public static void main(String[] args) throws Exception {
+        MonitorEvent event = new MonitorEvent();
+        Client client = new Client();
+        event.setBatchId(111L);
+        client.setActuatorMetricsUrl("http://127.0.0.1:10000/actuator-metrics");
+        client.setMonitorUrl("http://127.0.0.1:10000/monitor");
+        event.setClient(client);
+        List<MonitorMemoryPartition> call = new PullMemoryPartitionTask(event).call();
+        System.err.println("call " + JSON.toJSONString(call));
     }
 }

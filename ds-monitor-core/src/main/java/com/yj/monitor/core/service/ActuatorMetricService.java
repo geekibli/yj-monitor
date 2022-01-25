@@ -20,24 +20,24 @@ public class ActuatorMetricService {
     private MonitorConfig monitorConfig;
 
 
-    public RemoteInvokeRspVO getGcLiveDataSize() {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_LIVE_DATA_SIZE));
+    public RemoteInvokeRspVO getGcLiveDataSize(Integer port) {
+        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_LIVE_DATA_SIZE, port));
     }
 
-    public RemoteInvokeRspVO getGcMaxDataSize() {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MAX_DATA_SIZE));
+    public RemoteInvokeRspVO getGcMaxDataSize(Integer port) {
+        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MAX_DATA_SIZE, port));
     }
 
-    public RemoteInvokeRspVO getGcMemoryAllocated() {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_ALLOCATED));
+    public RemoteInvokeRspVO getGcMemoryAllocated(Integer port) {
+        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_ALLOCATED, port));
     }
 
-    public RemoteInvokeRspVO getGcMemoryPromoted() {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_PROMOTED));
+    public RemoteInvokeRspVO getGcMemoryPromoted(Integer port) {
+        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_PROMOTED, port));
     }
 
-    public RemoteInvokeRspVO getGcPause() {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_PAUSE));
+    public RemoteInvokeRspVO getGcPause(Integer port) {
+        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_PAUSE, port));
     }
 
     /**
@@ -46,7 +46,7 @@ public class ActuatorMetricService {
      * @param name 指标名称
      * @return
      */
-    private String metric(String name) {
-        return HttpUtil.get("http://localhost:" + monitorConfig.getApplicationPort() + "/" + name);
+    private String metric(String name, Integer port) {
+        return HttpUtil.get("http://localhost:" + port + "/actuator/metrics/" + name);
     }
 }

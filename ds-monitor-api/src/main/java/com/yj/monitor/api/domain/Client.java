@@ -10,6 +10,7 @@ public class Client {
     private String host;
     private Integer port;
     private String monitorUrl;
+    private String actuatorMetricsUrl;
     private String clientId;
     // /127.0.0.1:60571
     private String address;
@@ -61,5 +62,13 @@ public class Client {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getActuatorMetricsUrl() {
+        return actuatorMetricsUrl;
+    }
+
+    public void setActuatorMetricsUrl(String actuatorMetricsUrl) {
+        this.actuatorMetricsUrl = actuatorMetricsUrl;
     }
 }

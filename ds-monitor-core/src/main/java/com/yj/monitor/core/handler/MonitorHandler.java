@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class MonitorHandler {
 
-    public static Map<String, String> getRuntimeInfo() {
+    public Map<String, String> getRuntimeInfo() {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("ClassPath", runtime.getClassPath());
@@ -40,13 +40,13 @@ public class MonitorHandler {
         return map;
     }
 
-    public static Map<String, String> getSystemProperties() {
+    public Map<String, String> getSystemProperties() {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         return runtime.getSystemProperties();
     }
 
 
-    public static Map<String, String> getOperatingSystemInfo() {
+    public Map<String, String> getOperatingSystemInfo() {
         OperatingSystemMXBean osb = ManagementFactory.getOperatingSystemMXBean();
         HashMap<String, String> map = Maps.newHashMap();
         map.put("Name", osb.getName());
@@ -57,7 +57,7 @@ public class MonitorHandler {
         return map;
     }
 
-    public static Map<String, String> getMemoryInfo() {
+    public Map<String, String> getMemoryInfo() {
         MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         MemoryUsage heap = mxb.getHeapMemoryUsage();
@@ -74,7 +74,7 @@ public class MonitorHandler {
         return map;
     }
 
-    public static Map<String, String> getThreadInfo() {
+    public Map<String, String> getThreadInfo() {
         ThreadMXBean thread = ManagementFactory.getThreadMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("TotalStartedThreadCount", thread.getTotalStartedThreadCount() + "");
@@ -94,18 +94,17 @@ public class MonitorHandler {
         return map;
     }
 
-    public static Map<String, String> getClassLoader() {
+    public Map<String, String> getClassLoader() {
         ClassLoadingMXBean classLoading = ManagementFactory.getClassLoadingMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("LoadedClassCount", classLoading.getLoadedClassCount() + "");
         map.put("TotalLoadedClassCount", classLoading.getTotalLoadedClassCount() + "");
         map.put("UnloadedClassCount", classLoading.getUnloadedClassCount() + "");
         map.put("Verbose", classLoading.isVerbose() + "");
-        System.err.println("  sss " + JSON.toJSONString(map));
         return map;
     }
 
-    public static Map<String, Map<String, Long>> getGcInfo() {
+    public Map<String, Map<String, Long>> getGcInfo() {
         List<GarbageCollectorMXBean> gcList = ManagementFactory.getGarbageCollectorMXBeans();
         HashMap<String, Map<String, Long>> gcMap = new HashMap<String, Map<String, Long>>();
         for (GarbageCollectorMXBean gc : gcList) {
@@ -118,7 +117,7 @@ public class MonitorHandler {
     }
 
 
-    public static Map<String, String> getCompilation() {
+    public Map<String, String> getCompilation() {
         CompilationMXBean compilation = ManagementFactory.getCompilationMXBean();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("Name", compilation.getName());
@@ -128,7 +127,7 @@ public class MonitorHandler {
     }
 
 
-    private static String formatSize(long size) {
+    private String formatSize(long size) {
         String hrSize;
         double b = size;
         double k = size / 1024.0;
@@ -152,7 +151,7 @@ public class MonitorHandler {
         return hrSize;
     }
 
-    public static List<MemoryPartition> getMemoryPartition() { // 获取所有内存池MXBean列表，并遍历
+    public List<MemoryPartition> getMemoryPartition() { // 获取所有内存池MXBean列表，并遍历
         List<MemoryPoolMXBean> mxBeans = ManagementFactory.getMemoryPoolMXBeans();
         if (CollectionUtils.isEmpty(mxBeans)) {
             return new ArrayList<>();
@@ -200,7 +199,7 @@ public class MonitorHandler {
     }
 
 
-    private static String joinString(String[] vars) {
+    private String joinString(String[] vars) {
         if (1 == vars.length) {
             return vars[0];
         }
@@ -210,9 +209,4 @@ public class MonitorHandler {
         }
         return joiner.toString();
     }
-
-    public static void main(String[] args) {
-        System.err.println(getGcInfo());
-    }
-
 }

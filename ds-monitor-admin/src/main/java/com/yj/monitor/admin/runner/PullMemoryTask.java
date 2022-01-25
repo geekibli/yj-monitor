@@ -1,5 +1,7 @@
 package com.yj.monitor.admin.runner;
 
+import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
@@ -24,7 +26,7 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
     private final Logger logger = LoggerFactory.getLogger(PullMemoryTask.class);
 
 
-    private MonitorEvent monitorEvent;
+    private final MonitorEvent monitorEvent;
 
     public PullMemoryTask(MonitorEvent monitorEvent) {
         this.monitorEvent = monitorEvent;
@@ -37,13 +39,12 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
         }
 
         HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
-                .header("Content-Type", "application/json")
+                .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.MEMORY.getcName(), MonitorMethods.MEMORY.getmName(), new Object[0])))
                 .execute();
-        logger.info("memory {}", response.body());
+
 
         RemoteInvokeRspVO invokeRspVO = JSON.parseObject(response.body(), RemoteInvokeRspVO.class);
-
         Map<String,String> map = (Map<String,String>)invokeRspVO.getData();
 
         MonitorMemory memory = new MonitorMemory();

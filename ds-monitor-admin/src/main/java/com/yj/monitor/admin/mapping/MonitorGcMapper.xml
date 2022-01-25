@@ -6,10 +6,10 @@
     <result column="batch_id" jdbcType="BIGINT" property="batchId" />
     <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
     <result column="client_id" jdbcType="VARCHAR" property="clientId" />
-    <result column="ps_marksweep_collection_time" jdbcType="BIGINT" property="psMarksweepCollectionTime" />
-    <result column="ps_marksweep_collection_count" jdbcType="BIGINT" property="psMarksweepCollectionCount" />
-    <result column="ps_scavenge_collection_time" jdbcType="BIGINT" property="psScavengeCollectionTime" />
-    <result column="ps_scavenge_collection_count" jdbcType="BIGINT" property="psScavengeCollectionCount" />
+    <result column="ps_marksweep_collection_time" jdbcType="INTEGER" property="psMarksweepCollectionTime" />
+    <result column="ps_marksweep_collection_count" jdbcType="INTEGER" property="psMarksweepCollectionCount" />
+    <result column="ps_scavenge_collection_time" jdbcType="INTEGER" property="psScavengeCollectionTime" />
+    <result column="ps_scavenge_collection_count" jdbcType="INTEGER" property="psScavengeCollectionCount" />
     <result column="live_data_size" jdbcType="BIGINT" property="liveDataSize" />
     <result column="max_data_size" jdbcType="BIGINT" property="maxDataSize" />
     <result column="memory_allocated_count" jdbcType="BIGINT" property="memoryAllocatedCount" />
@@ -49,8 +49,8 @@
       pause_max, create_time, update_time, 
       is_deleted)
     values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
-      #{psMarksweepCollectionTime,jdbcType=BIGINT}, #{psMarksweepCollectionCount,jdbcType=BIGINT}, 
-      #{psScavengeCollectionTime,jdbcType=BIGINT}, #{psScavengeCollectionCount,jdbcType=BIGINT}, 
+      #{psMarksweepCollectionTime,jdbcType=INTEGER}, #{psMarksweepCollectionCount,jdbcType=INTEGER}, 
+      #{psScavengeCollectionTime,jdbcType=INTEGER}, #{psScavengeCollectionCount,jdbcType=INTEGER}, 
       #{liveDataSize,jdbcType=BIGINT}, #{maxDataSize,jdbcType=BIGINT}, #{memoryAllocatedCount,jdbcType=BIGINT}, 
       #{memoryPromotedCount,jdbcType=BIGINT}, #{pauseCount,jdbcType=BIGINT}, #{pauseTotalTime,jdbcType=DOUBLE}, 
       #{pauseMax,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -125,16 +125,16 @@
         #{clientId,jdbcType=VARCHAR},
       </if>
       <if test="psMarksweepCollectionTime != null">
-        #{psMarksweepCollectionTime,jdbcType=BIGINT},
+        #{psMarksweepCollectionTime,jdbcType=INTEGER},
       </if>
       <if test="psMarksweepCollectionCount != null">
-        #{psMarksweepCollectionCount,jdbcType=BIGINT},
+        #{psMarksweepCollectionCount,jdbcType=INTEGER},
       </if>
       <if test="psScavengeCollectionTime != null">
-        #{psScavengeCollectionTime,jdbcType=BIGINT},
+        #{psScavengeCollectionTime,jdbcType=INTEGER},
       </if>
       <if test="psScavengeCollectionCount != null">
-        #{psScavengeCollectionCount,jdbcType=BIGINT},
+        #{psScavengeCollectionCount,jdbcType=INTEGER},
       </if>
       <if test="liveDataSize != null">
         #{liveDataSize,jdbcType=BIGINT},
@@ -181,16 +181,16 @@
         client_id = #{clientId,jdbcType=VARCHAR},
       </if>
       <if test="psMarksweepCollectionTime != null">
-        ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=BIGINT},
+        ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=INTEGER},
       </if>
       <if test="psMarksweepCollectionCount != null">
-        ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=BIGINT},
+        ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=INTEGER},
       </if>
       <if test="psScavengeCollectionTime != null">
-        ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=BIGINT},
+        ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=INTEGER},
       </if>
       <if test="psScavengeCollectionCount != null">
-        ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=BIGINT},
+        ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=INTEGER},
       </if>
       <if test="liveDataSize != null">
         live_data_size = #{liveDataSize,jdbcType=BIGINT},
@@ -230,10 +230,10 @@
     set batch_id = #{batchId,jdbcType=BIGINT},
       client_address = #{clientAddress,jdbcType=VARCHAR},
       client_id = #{clientId,jdbcType=VARCHAR},
-      ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=BIGINT},
-      ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=BIGINT},
-      ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=BIGINT},
-      ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=BIGINT},
+      ps_marksweep_collection_time = #{psMarksweepCollectionTime,jdbcType=INTEGER},
+      ps_marksweep_collection_count = #{psMarksweepCollectionCount,jdbcType=INTEGER},
+      ps_scavenge_collection_time = #{psScavengeCollectionTime,jdbcType=INTEGER},
+      ps_scavenge_collection_count = #{psScavengeCollectionCount,jdbcType=INTEGER},
       live_data_size = #{liveDataSize,jdbcType=BIGINT},
       max_data_size = #{maxDataSize,jdbcType=BIGINT},
       memory_allocated_count = #{memoryAllocatedCount,jdbcType=BIGINT},

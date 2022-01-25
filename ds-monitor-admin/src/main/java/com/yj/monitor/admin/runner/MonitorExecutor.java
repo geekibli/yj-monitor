@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MonitorExecutor {
 
+    private static final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setNameFormat("monitor-%d").build();
     private volatile static ThreadPoolExecutor executor = null;
 
     private MonitorExecutor() {
@@ -22,13 +23,12 @@ public class MonitorExecutor {
     public static ThreadPoolExecutor build() {
         if (null == executor) {
             synchronized (MonitorExecutor.class) {
-                ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("monitor-%d").build();
                 executor = new ThreadPoolExecutor(4,
                         8,
                         0L,
                         TimeUnit.MILLISECONDS,
                         new LinkedBlockingQueue<>(128),
-                        namedThreadFactory,
+                        THREAD_FACTORY,
                         new ThreadPoolExecutor.AbortPolicy());
             }
         }

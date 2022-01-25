@@ -1,5 +1,7 @@
 package com.yj.monitor.admin.runner;
 
+import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
@@ -9,7 +11,6 @@ import com.yj.monitor.api.constant.MonitorMethods;
 import com.yj.monitor.api.domain.Client;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
 import com.yj.monitor.api.rsp.RemoteInvokeRspVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,21 +39,17 @@ public class PullThreadTask implements Callable<MonitorThread> {
         }
 
         HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
-                .header("Content-Type", "application/json")
+                .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.THREAD.getcName(), MonitorMethods.THREAD.getmName(), new Object[0])))
                 .execute();
-        logger.info("thread {}", response.body());
 
         RemoteInvokeRspVO invokeRspVO = JSON.parseObject(response.body(), RemoteInvokeRspVO.class);
-
         Map<String, String> map = (Map<String, String>) invokeRspVO.getData();
 
         MonitorThread thread = new MonitorThread();
-
         thread.setBatchId(monitorEvent.getBatchId());
         thread.setClientAddress(monitorEvent.getClient().getAddress());
         thread.setClientId(monitorEvent.getClient().getClientId());
-
         thread.setDaemonCount(Long.valueOf(map.get("DaemonThreadCount")));
         thread.setTotalStartedCount(Long.valueOf(map.get("TotalStartedThreadCount")));
         thread.setPeakCount(Long.valueOf(map.get("PeakThreadCount")));
@@ -61,26 +58,6 @@ public class PullThreadTask implements Callable<MonitorThread> {
         if (!"null".equals(deadThreads)) {
             thread.setDeadlockThreads(deadThreads);
         }
-
         return thread;
     }
-
-
-    public static void main(String[] args) throws Exception {
-        MonitorEvent event = new MonitorEvent();
-        event.setBatchId(1485562321706885123L);
-        Client client = new Client();
-        client.setAddress("/127.0.0.1:58499");
-        client.setClientId("yjmonitorcore001");
-        client.setMonitorUrl("http://192.168.50.154:10000/monitor");
-        client.setHost("192.168.50.154");
-        client.setPort(10000);
-        event.setClient(client);
-        MonitorThread call = new PullThreadTask(event).call();
-        System.err.println("call " + JSON.toJSONString(call));
-
-
-    }
-
-
 }

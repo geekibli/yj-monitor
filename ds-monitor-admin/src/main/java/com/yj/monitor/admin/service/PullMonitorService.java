@@ -1,18 +1,14 @@
 package com.yj.monitor.admin.service;
 
-import com.yj.monitor.admin.config.AdminMonitorConfig;
+import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.disruptor.MonitorEventProducer;
-import com.yj.monitor.admin.entity.*;
-import com.yj.monitor.admin.mapper.*;
 import com.yj.monitor.admin.runner.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,19 +22,15 @@ public class PullMonitorService {
     private final Logger logger = LoggerFactory.getLogger(PullMonitorService.class);
 
     @Resource
-    private AdminMonitorConfig adminMonitorConfig;
-    @Resource
     private MonitorEventProducer monitorEventProducer;
     @Resource
-    private MonitorMemoryMapper monitorMemoryMapper;
+    private MemoryService memoryService;
     @Resource
-    private MonitorMemoryPartitionMapper monitorMemoryPartitionMapper;
+    private ThreadService threadService;
     @Resource
-    private MonitorThreadMapper monitorThreadMapper;
+    private ClassLoadService classLoadService;
     @Resource
-    private MonitorClassLoadMapper monitorClassLoadMapper;
-    @Resource
-    private MonitorGcMapper monitorGcMapper;
+    private GcService gcService;
 
     /**
      * 定时执行
@@ -48,7 +40,7 @@ public class PullMonitorService {
      */
     public synchronized void execute() {
         logger.info("【 Monitor admin 】start schedule job. ");
-        MonitorPool.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 0, 5, TimeUnit.SECONDS);
+        MonitorScheduleExecutor.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 0, 30, TimeUnit.SECONDS);
     }
 
 
@@ -60,19 +52,26 @@ public class PullMonitorService {
      * @param b            b
      */
     public void handleDisruptor(MonitorEvent monitorEvent, long l, boolean b) {
-        Future<MonitorThread> threadFuture = MonitorExecutor.build().submit(new PullThreadTask(monitorEvent));
-        Future<MonitorMemory> memoryFuture = MonitorExecutor.build().submit(new PullMemoryTask(monitorEvent));
-        Future<List<MonitorMemoryPartition>> memoryPartitionFuture = MonitorExecutor.build().submit(new PullMemoryPartitionTask(monitorEvent));
-        Future<MonitorClassLoad> memoryClassLoadFuture = MonitorExecutor.build().submit(new PullClassLoadTask(monitorEvent));
-        Future<MonitorGc> memoryGcFuture = MonitorExecutor.build().submit(new PullGcTask(monitorEvent));
-
-
-
-
-
-
-
-
+        switch (monitorEvent.getMethod().getmName()) {
+            case "getMemoryInfo":
+                memoryService.saveMemory(monitorEvent);
+                break;
+            case "getThreadInfo":
+                threadService.saveThread(monitorEvent);
+                break;
+            case "getClassLoader":
+                classLoadService.saveClassLoad(monitorEvent);
+                break;
+            case "getMemoryPartition":
+                memoryService.savePartitions(monitorEvent);
+                break;
+            case "getGcInfo":
+                gcService.saveGc(monitorEvent);
+                break;
+            default:
+                logger.info("无响应的MonitorEvent : sequence-{}  event:{}", l, JSON.toJSONString(monitorEvent));
+        }
+        logger.info("监控事件消费完成 : sequence-{} event:{}", l, monitorEvent.getBatchId());
     }
 
 

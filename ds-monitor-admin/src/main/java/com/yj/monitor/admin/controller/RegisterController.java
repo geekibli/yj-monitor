@@ -41,7 +41,7 @@ public class RegisterController {
         Assert.state(!ClientContainer.existed(reqVo.getClientId()), "Dup clientId!");
 
         registerService.register(reqVo);
-        return RemoteAPI.register2adminRsp;
+        return RemoteAPI.REGISTER_2_ADMIN_RSP;
     }
 
     @RequestMapping("/online/nodes")

@@ -1,6 +1,7 @@
 package com.yj.monitor.admin.disruptor;
 
 import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.api.domain.Method;
 
 /**
  * @Author gaolei
@@ -10,8 +11,8 @@ import com.yj.monitor.api.domain.Client;
 public class MonitorEvent {
 
     private Client client;
-
     private Long batchId;
+    private Method method;
 
     public MonitorEvent() {
     }
@@ -35,5 +36,13 @@ public class MonitorEvent {
 
     public boolean notValid(){
         return this.batchId == null || this.client == null;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
     }
 }

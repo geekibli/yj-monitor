@@ -21,8 +21,4 @@ public class DiscardService {
         logger.warn(clientId + "断开链接 ...");
         return RemoteAPI.DISCARD_CLIENT_RSP;
     }
-
-
-
-
 }

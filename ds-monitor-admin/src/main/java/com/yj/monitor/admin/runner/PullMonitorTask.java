@@ -6,6 +6,7 @@ import com.yj.monitor.admin.domain.ClientContainer;
 import com.yj.monitor.api.domain.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class PullMonitorTask implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(PullMonitorTask.class);
 
-    private MonitorEventProducer monitorEventProducer;
+    private final MonitorEventProducer monitorEventProducer;
 
     public PullMonitorTask(MonitorEventProducer monitorEventProducer) {
         this.monitorEventProducer = monitorEventProducer;
@@ -27,6 +28,9 @@ public class PullMonitorTask implements Runnable {
     @Override
     public void run() {
         List<Client> clients = ClientContainer.onlineClient();
+        if (CollectionUtils.isEmpty(clients)) {
+            return;
+        }
         logger.info("Current online node: {}", JSON.toJSONString(clients));
         for (Client client : clients) {
             monitorEventProducer.onData(client);

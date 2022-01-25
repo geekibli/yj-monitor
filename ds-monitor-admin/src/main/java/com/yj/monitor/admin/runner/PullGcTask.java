@@ -1,8 +1,8 @@
 package com.yj.monitor.admin.runner;
 
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.*;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorGc;
 import com.yj.monitor.api.constant.MonitorMethods;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -28,22 +29,19 @@ public class PullGcTask implements Callable<MonitorGc> {
 
     private final Logger logger = LoggerFactory.getLogger(PullGcTask.class);
 
-    private MonitorEvent monitorEvent;
+    private final MonitorEvent monitorEvent;
 
     public PullGcTask(MonitorEvent monitorEvent) {
         this.monitorEvent = monitorEvent;
     }
 
     @Override
-    public MonitorGc call() throws Exception {
+    public MonitorGc call() {
         if (null == monitorEvent || monitorEvent.notValid()) {
             return null;
         }
 
-
-        String body = remoteInvoke(MonitorMethods.GC);
-        logger.info("gc {}", body);
-
+        String body = remoteInvoke(monitorEvent.getClient().getMonitorUrl(), MonitorMethods.GC, null);
 
         MonitorGc gc = new MonitorGc();
         gc.setBatchId(monitorEvent.getBatchId());
@@ -51,19 +49,18 @@ public class PullGcTask implements Callable<MonitorGc> {
         gc.setClientId(monitorEvent.getClient().getClientId());
 
         RemoteInvokeRspVO invokeRspVO = JSON.parseObject(body, RemoteInvokeRspVO.class);
-        Map<String, Map<String, Long>> map = (Map<String, Map<String, Long>>) invokeRspVO.getData();
+        Map<String, Map<String, Integer>> map = (Map<String, Map<String, Integer>>) invokeRspVO.getData();
 
-        Map<String, Long> sweepMap = map.get("PS MarkSweep");
+        Map<String, Integer> sweepMap = map.get("PS MarkSweep");
         if (null != sweepMap && !sweepMap.isEmpty()) {
-            gc.setPsMarksweepCollectionCount(sweepMap.get("CollectionTime"));
-            gc.setPsMarksweepCollectionTime(sweepMap.get("CollectionCount"));
+            gc.setPsMarksweepCollectionCount(Optional.ofNullable(sweepMap.get("CollectionTime")).orElse(0));
+            gc.setPsMarksweepCollectionTime(Optional.ofNullable(sweepMap.get("CollectionCount")).orElse(0));
         }
 
-
-        Map<String, Long> scavengeMap = map.get("PS Scavenge");
+        Map<String, Integer> scavengeMap = map.get("PS Scavenge");
         if (null != scavengeMap && !scavengeMap.isEmpty()) {
-            gc.setPsScavengeCollectionCount(scavengeMap.get("CollectionCount"));
-            gc.setPsScavengeCollectionTime(scavengeMap.get("CollectionTime"));
+            gc.setPsScavengeCollectionCount(Optional.ofNullable(scavengeMap.get("CollectionCount")).orElse(0));
+            gc.setPsScavengeCollectionTime(Optional.ofNullable(scavengeMap.get("CollectionTime")).orElse(0));
         }
 
         gc.setLiveDataSize(getLiveDataSize());
@@ -71,75 +68,63 @@ public class PullGcTask implements Callable<MonitorGc> {
         gc.setMemoryAllocatedCount(getMemoryAllocated());
         gc.setMemoryPromotedCount(getMemoryPromoted());
 
-        Map<String, Long> pauseMap = getGcPause();
+        Map<String, Long> pauseMap = getGcPause(monitorEvent.getClient().getPort());
         gc.setPauseCount(pauseMap.get("COUNT"));
         gc.setPauseMax(pauseMap.get("MAX"));
         // TODO
         if (null != pauseMap.get("TOTAL_TIME")) {
             gc.setPauseTotalTime(new BigDecimal(pauseMap.get("TOTAL_TIME")).doubleValue());
         }
-
-
         return gc;
     }
 
-
     public Long getLiveDataSize() {
-        String body = remoteInvoke(MonitorMethods.JVM_GC_LIVE_DATA_SIZE);
-        if (StringUtils.isBlank(body)) {
-            return 0L;
-        }
-
-        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
-        if (measurements.isEmpty()) {
-            return null;
-        }
-
-        return measurements.get(0).getValue();
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_LIVE_DATA_SIZE, monitorEvent.getClient().getPort());
     }
 
     public Long getMaxDataSize() {
-        String body = remoteInvoke(MonitorMethods.JVM_GC_MAX_DATA_SIZE);
-
-        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
-        if (measurements.isEmpty()) {
-            return null;
-        }
-
-        return measurements.get(0).getValue();
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MAX_DATA_SIZE, monitorEvent.getClient().getPort());
     }
 
     public Long getMemoryAllocated() {
-        String body = remoteInvoke(MonitorMethods.JVM_GC_MEMORY_ALLOCATED);
-
-        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
-        if (measurements.isEmpty()) {
-            return null;
-        }
-
-        return measurements.get(0).getValue();
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_ALLOCATED, monitorEvent.getClient().getPort());
     }
 
     public Long getMemoryPromoted() {
-        String body = remoteInvoke(MonitorMethods.JVM_GC_MEMORY_PROMOTED);
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_PROMOTED, monitorEvent.getClient().getPort());
+    }
 
-        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
+    private Long getMeasurementFirstVal(Method method, Integer clientPort) {
+        Object[] param = new Object[1];
+        param[0] = clientPort;
+        String body = remoteInvoke(monitorEvent.getClient().getActuatorMetricsUrl(), method, param);
+        if (StringUtils.isEmpty(body)) {
+            throw new RuntimeException();
+        }
+        JSONObject bodyJson = JSON.parseObject(body);
+        if (HttpStatus.HTTP_OK != bodyJson.getInteger("code")) {
+            throw new RuntimeException();
+        }
+
+        JSONObject data = bodyJson.getJSONObject("data");
+        List<Measurement> measurements = data.getJSONArray("measurements").toJavaList(Measurement.class);
         if (measurements.isEmpty()) {
             return null;
         }
-
         return measurements.get(0).getValue();
     }
 
-    public Map<String, Long> getGcPause() {
-        String body = remoteInvoke(MonitorMethods.JVM_GC_MEMORY_PROMOTED);
-
-        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
+    public Map<String, Long> getGcPause(Integer clientPort) {
+        Object[] param = new Object[1];
+        param[0] = clientPort;
+        String body = remoteInvoke(monitorEvent.getClient().getActuatorMetricsUrl(), MonitorMethods.JVM_GC_PAUSE, param);
+        JSONObject data = JSON.parseObject(body).getJSONObject("data");
+        List<Measurement> measurements = data.getJSONArray("measurements").toJavaList(Measurement.class);
         if (measurements.isEmpty()) {
             return null;
         }
-
-        return measurements.stream().collect(Collectors.toMap(Measurement::getStatistic, Measurement::getValue, (o1, o2) -> o1));
+        return measurements.stream()
+                .collect(Collectors.toMap(Measurement::getStatistic, Measurement::getValue, (o1, o2) -> o1));
     }
 
 
@@ -164,14 +149,13 @@ public class PullGcTask implements Callable<MonitorGc> {
         }
     }
 
-
-    private String remoteInvoke(Method method) {
-        HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
-                .header("Content-Type", "application/json")
-                .body(JSON.toJSONString(new RemoteMonitorReqVO(method.getcName(), method.getmName(), new Object[0])))
+    // TODO
+    private String remoteInvoke(String url, Method method, Object[] param) {
+        HttpResponse response = HttpUtil.createPost(url)
+                .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
+                .body(JSON.toJSONString(new RemoteMonitorReqVO(method.getcName(), method.getmName(), param)))
                 .execute();
         return response.body();
     }
-
 
 }

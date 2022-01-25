@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.yj.monitor.api.domain.Token;
 import com.yj.monitor.api.util.IpUtil;
 import com.yj.monitor.api.util.Rc4Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,7 @@ import javax.annotation.Resource;
 @EnableConfigurationProperties(DsMonitorProperties.class)
 public class MonitorConfiguration {
 
+    private final Logger logger = LoggerFactory.getLogger(MonitorConfiguration.class);
 
     @Value(value = "${server.port}")
     private final Integer applicationPort = 8080;
@@ -65,7 +68,7 @@ public class MonitorConfiguration {
         config.setApplicationPort(applicationPort);
         config.setApplicationName(applicationName);
         config.setHeartPort(monitorProperties.getHeartPort());
-        System.err.println(JSON.toJSONString(config));
+        logger.info(" ==============================  Load client monitor config ============================== \n    {}", JSON.toJSONString(config));
         return config;
     }
 

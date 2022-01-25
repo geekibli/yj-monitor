@@ -27,6 +27,7 @@ public class RegisterService {
     public void register(ClientRegisterReqVO reqVO) {
         Client client = new Client(reqVO.getClientHost(), reqVO.getClientPort());
         client.setMonitorUrl("http://" + reqVO.getClientHost() + ":" + reqVO.getClientPort() + RemoteAPI.MONITOR_PULL);
+        client.setActuatorMetricsUrl("http://" + reqVO.getClientHost() + ":" + reqVO.getClientPort() + RemoteAPI.ACTUATOR_METRICS);
         client.setClientId(reqVO.getClientId());
 
         ClientContainer.online(reqVO.getClientId(), client);

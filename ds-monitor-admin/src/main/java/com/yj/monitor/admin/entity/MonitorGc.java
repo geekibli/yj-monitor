@@ -30,22 +30,22 @@ public class MonitorGc {
     /**
      * 收集时间
      */
-    private Long psMarksweepCollectionTime;
+    private Integer psMarksweepCollectionTime;
 
     /**
      * 收集次数
      */
-    private Long psMarksweepCollectionCount;
+    private Integer psMarksweepCollectionCount;
 
     /**
      * 收集时间
      */
-    private Long psScavengeCollectionTime;
+    private Integer psScavengeCollectionTime;
 
     /**
      * 收集次数
      */
-    private Long psScavengeCollectionCount;
+    private Integer psScavengeCollectionCount;
 
     /**
      * 实时数据大小
@@ -132,35 +132,35 @@ public class MonitorGc {
         this.clientId = clientId;
     }
 
-    public Long getPsMarksweepCollectionTime() {
+    public Integer getPsMarksweepCollectionTime() {
         return psMarksweepCollectionTime;
     }
 
-    public void setPsMarksweepCollectionTime(Long psMarksweepCollectionTime) {
+    public void setPsMarksweepCollectionTime(Integer psMarksweepCollectionTime) {
         this.psMarksweepCollectionTime = psMarksweepCollectionTime;
     }
 
-    public Long getPsMarksweepCollectionCount() {
+    public Integer getPsMarksweepCollectionCount() {
         return psMarksweepCollectionCount;
     }
 
-    public void setPsMarksweepCollectionCount(Long psMarksweepCollectionCount) {
+    public void setPsMarksweepCollectionCount(Integer psMarksweepCollectionCount) {
         this.psMarksweepCollectionCount = psMarksweepCollectionCount;
     }
 
-    public Long getPsScavengeCollectionTime() {
+    public Integer getPsScavengeCollectionTime() {
         return psScavengeCollectionTime;
     }
 
-    public void setPsScavengeCollectionTime(Long psScavengeCollectionTime) {
+    public void setPsScavengeCollectionTime(Integer psScavengeCollectionTime) {
         this.psScavengeCollectionTime = psScavengeCollectionTime;
     }
 
-    public Long getPsScavengeCollectionCount() {
+    public Integer getPsScavengeCollectionCount() {
         return psScavengeCollectionCount;
     }
 
-    public void setPsScavengeCollectionCount(Long psScavengeCollectionCount) {
+    public void setPsScavengeCollectionCount(Integer psScavengeCollectionCount) {
         this.psScavengeCollectionCount = psScavengeCollectionCount;
     }
 
