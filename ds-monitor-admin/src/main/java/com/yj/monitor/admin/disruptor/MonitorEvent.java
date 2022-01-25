@@ -1,6 +1,6 @@
 package com.yj.monitor.admin.disruptor;
 
-import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.api.domain.Node;
 import com.yj.monitor.api.domain.Method;
 
 /**
@@ -10,19 +10,19 @@ import com.yj.monitor.api.domain.Method;
  */
 public class MonitorEvent {
 
-    private Client client;
+    private Node node;
     private Long batchId;
     private Method method;
 
     public MonitorEvent() {
     }
 
-    public Client getClient() {
-        return client;
+    public Node getNode() {
+        return node;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setNode(Node node) {
+        this.node = node;
     }
 
     public Long getBatchId() {
@@ -35,7 +35,7 @@ public class MonitorEvent {
 
 
     public boolean notValid(){
-        return this.batchId == null || this.client == null;
+        return this.batchId == null || this.node == null;
     }
 
     public Method getMethod() {

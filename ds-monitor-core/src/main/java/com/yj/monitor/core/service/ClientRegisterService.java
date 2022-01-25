@@ -6,13 +6,16 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.yj.monitor.api.constant.RemoteAPI;
+import com.yj.monitor.api.domain.Node;
 import com.yj.monitor.api.req.ClientRegisterReqVO;
 import com.yj.monitor.core.config.MonitorConfig;
+import com.yj.monitor.core.handler.MonitorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @Author gaolei
@@ -28,6 +31,8 @@ public class ClientRegisterService {
     private MonitorConfig monitorConfig;
     @Resource
     private ClientHeartService clientHeartService;
+    @Resource
+    private MonitorHandler monitorHandler;
 
     /**
      * 1、把当前结点信息注册到admin
@@ -51,7 +56,7 @@ public class ClientRegisterService {
         try {
             HttpResponse execute = HttpUtil.createPost(monitorConfig.getAdminUrl() + RemoteAPI.REGISTER_2_ADMIN)
                     .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
-                    .body(JSON.toJSONString(genRegisterReq()))
+                    .body(JSON.toJSONString(assembleNode()))
                     .execute();
 
             if (RemoteAPI.REGISTER_2_ADMIN_RSP.equals(execute.body())) {
@@ -94,6 +99,23 @@ public class ClientRegisterService {
         reqVO.setClientId(monitorConfig.getClientId());
         reqVO.setAuthToken(monitorConfig.getAuthToken());
         return reqVO;
+    }
+
+    private Node assembleNode() {
+        Node node = new Node();
+        node.setApplicationName(monitorConfig.getApplicationName());
+        node.setClientHost(monitorConfig.getLocalHost());
+        node.setClientPort(monitorConfig.getApplicationPort());
+        node.setClientId(monitorConfig.getClientId());
+        node.setAuthToken(monitorConfig.getAuthToken());
+        node.setMonitorUrl("http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getApplicationPort() + RemoteAPI.MONITOR_PULL);
+        node.setActuatorMetricsUrl("http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getApplicationPort() + RemoteAPI.ACTUATOR_METRICS);
+        Map<String, String> operatingSystemInfo = monitorHandler.getOperatingSystemInfo();
+        node.setSystemType(operatingSystemInfo.get("Name"));
+
+        logger.info("client name {}", JSON.toJSONString(node));
+
+        return node;
     }
 
 }

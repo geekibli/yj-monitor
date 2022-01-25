@@ -2,7 +2,7 @@ package com.yj.monitor.core.service;
 
 import cn.hutool.http.HttpUtil;
 import com.yj.monitor.api.constant.MetricName;
-import com.yj.monitor.api.rsp.RemoteInvokeRspVO;
+import com.yj.monitor.api.rsp.Response;
 import com.yj.monitor.core.config.MonitorConfig;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +20,24 @@ public class ActuatorMetricService {
     private MonitorConfig monitorConfig;
 
 
-    public RemoteInvokeRspVO getGcLiveDataSize(Integer port) {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_LIVE_DATA_SIZE, port));
+    public Response getGcLiveDataSize(Integer port) {
+        return Response.successData(metric(MetricName.JVM_GC_LIVE_DATA_SIZE, port));
     }
 
-    public RemoteInvokeRspVO getGcMaxDataSize(Integer port) {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MAX_DATA_SIZE, port));
+    public Response getGcMaxDataSize(Integer port) {
+        return Response.successData(metric(MetricName.JVM_GC_MAX_DATA_SIZE, port));
     }
 
-    public RemoteInvokeRspVO getGcMemoryAllocated(Integer port) {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_ALLOCATED, port));
+    public Response getGcMemoryAllocated(Integer port) {
+        return Response.successData(metric(MetricName.JVM_GC_MEMORY_ALLOCATED, port));
     }
 
-    public RemoteInvokeRspVO getGcMemoryPromoted(Integer port) {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_MEMORY_PROMOTED, port));
+    public Response getGcMemoryPromoted(Integer port) {
+        return Response.successData(metric(MetricName.JVM_GC_MEMORY_PROMOTED, port));
     }
 
-    public RemoteInvokeRspVO getGcPause(Integer port) {
-        return RemoteInvokeRspVO.successData(metric(MetricName.JVM_GC_PAUSE, port));
+    public Response getGcPause(Integer port) {
+        return Response.successData(metric(MetricName.JVM_GC_PAUSE, port));
     }
 
     /**

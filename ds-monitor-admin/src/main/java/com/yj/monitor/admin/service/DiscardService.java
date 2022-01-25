@@ -1,6 +1,6 @@
 package com.yj.monitor.admin.service;
 
-import com.yj.monitor.admin.domain.ClientContainer;
+import com.yj.monitor.admin.domain.RegisterCenter;
 import com.yj.monitor.api.constant.RemoteAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ public class DiscardService {
     private final Logger logger = LoggerFactory.getLogger(DiscardService.class);
 
     public String discardClient(String clientId){
-        ClientContainer.removeByClient(clientId);
+        RegisterCenter.removeByClient(clientId);
         logger.warn(clientId + "断开链接 ...");
         return RemoteAPI.DISCARD_CLIENT_RSP;
     }

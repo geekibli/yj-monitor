@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.ext.ClientRegisterTableExtMapper">
+
+    <select id="getByClientId" parameterType="string"
+            resultMap="com.yj.monitor.admin.mapper.ClientRegisterTableMapper.BaseResultMap">
+        select
+        <include refid="com.yj.monitor.admin.mapper.ClientRegisterTableMapper.Base_Column_List"/>
+        from client_register_table
+        where client_id = #{clientId}
+    </select>
+
+    <update id="incrLoadTimes" parameterType="string">
+        update
+        client_register_table
+        set load_times = load_times + 1
+        where client_id = #{clientId}
+    </update>
+
+    <select id="pageList" parameterType="string"
+            resultMap="com.yj.monitor.admin.mapper.ClientRegisterTableMapper.BaseResultMap">
+        select
+        <include refid="com.yj.monitor.admin.mapper.ClientRegisterTableMapper.Base_Column_List"/>
+        from client_register_table
+        where is_deleted = 0
+        <if test="clientId != null and clientId != ''">
+            AND client_id = #{clientId}
+        </if>
+        <if test="applicationName != null and applicationName != ''">
+            AND application_name = #{applicationName}
+        </if>
+    </select>
+
+    <update id="setAddress" parameterType="string">
+        update
+        client_register_table
+        set client_address = #{address}
+        where client_id = #{clientId}
+    </update>
+
+</mapper>

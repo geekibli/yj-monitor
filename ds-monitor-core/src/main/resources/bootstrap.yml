@@ -14,7 +14,7 @@ spring:
 
 yj:
   monitor:
-    client-id: yjmonitorcore001
+    client-id: yjmonitorcore002
     admin:
       host: 127.0.0.1
       port: 9000

@@ -9,7 +9,7 @@ import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorMemory;
 import com.yj.monitor.api.constant.MonitorMethods;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
-import com.yj.monitor.api.rsp.RemoteInvokeRspVO;
+import com.yj.monitor.api.rsp.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,19 +38,19 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
             return null;
         }
 
-        HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
+        HttpResponse response = HttpUtil.createPost(monitorEvent.getNode().getMonitorUrl())
                 .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.MEMORY.getcName(), MonitorMethods.MEMORY.getmName(), new Object[0])))
                 .execute();
 
 
-        RemoteInvokeRspVO invokeRspVO = JSON.parseObject(response.body(), RemoteInvokeRspVO.class);
+        Response invokeRspVO = JSON.parseObject(response.body(), Response.class);
         Map<String,String> map = (Map<String,String>)invokeRspVO.getData();
 
         MonitorMemory memory = new MonitorMemory();
         memory.setBatchId(monitorEvent.getBatchId());
-        memory.setClientAddress(monitorEvent.getClient().getAddress());
-        memory.setClientId(monitorEvent.getClient().getClientId());
+        memory.setClientAddress(monitorEvent.getNode().getAddress());
+        memory.setClientId(monitorEvent.getNode().getClientId());
 
         memory.setHeapCommitted(Long.valueOf(map.get("heap.committed")));
         memory.setHeapMax(Long.valueOf(map.get("heap.max")));

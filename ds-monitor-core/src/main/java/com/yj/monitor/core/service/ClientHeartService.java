@@ -52,10 +52,9 @@ public class ClientHeartService {
             logger.info("Send heart to admin for : {}", host + ":" + port);
             Channel channel = bootstrap.connect(host, port).sync().channel();
             while (channel.isActive()) {
-                Thread.sleep(1000);
+                Thread.sleep(10000);
                 if (StringUtils.isBlank(LoadRunner.localAddress)) {
                     LoadRunner.localAddress = channel.localAddress().toString();
-                    logger.error("localAddress : {}", LoadRunner.localAddress);
                 }
                 channel.writeAndFlush(RemoteAPI.HEART_BEAT_MSG + monitorConfig.getClientId());
             }

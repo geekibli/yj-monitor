@@ -1,14 +1,16 @@
 package com.yj.monitor.admin.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.yj.monitor.admin.domain.ClientContainer;
+import com.yj.monitor.admin.domain.RegisterCenter;
+import com.yj.monitor.admin.service.RegisterService;
 import com.yj.monitor.api.constant.RemoteAPI;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 import static io.netty.handler.timeout.IdleState.*;
 
@@ -17,18 +19,22 @@ import static io.netty.handler.timeout.IdleState.*;
  * @Date 2022/1/20 下午2:45
  * @Version 1.0
  */
-@Service
+@Component
 public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
 
     private final Logger logger = LoggerFactory.getLogger(AdminHeartBeatHandler.class);
 
     int readIdleTimes = 0;
 
+    @Resource
+    private RegisterService registerService;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String s) {
         try {
             if (s.startsWith(RemoteAPI.HEART_BEAT_MSG)) {
-                ClientContainer.markAddress(ctx.channel().remoteAddress().toString(), s.replace(RemoteAPI.HEART_BEAT_MSG, ""));
+                RegisterCenter.markAddress(ctx.channel().remoteAddress().toString(), s.replace(RemoteAPI.HEART_BEAT_MSG, ""));
+                registerService.setAddress(s.replace(RemoteAPI.HEART_BEAT_MSG, ""), ctx.channel().remoteAddress().toString());
                 ctx.channel().writeAndFlush(RemoteAPI.HEART_BEAT_OK);
                 return;
             }
@@ -46,7 +52,6 @@ public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
             case READER_IDLE:
                 eventType = READER_IDLE.name();
                 readIdleTimes++;
-                logger.error(ctx.channel().remoteAddress() + " read timeout ... \n {}", JSON.toJSONString(ClientContainer.onlineClientMap()));
                 break;
             case WRITER_IDLE:
                 eventType = WRITER_IDLE.name();
@@ -60,7 +65,7 @@ public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
         logger.info(ctx.channel().remoteAddress() + " timeout event : " + eventType);
         if (readIdleTimes > 10) {
             logger.warn(" Heartbeat timeout limit exceeded ");
-            ClientContainer.removeByAddress(ctx.channel().remoteAddress().toString());
+            RegisterCenter.removeByAddress(ctx.channel().remoteAddress().toString());
             ctx.channel().writeAndFlush("idle close");
             ctx.channel().close();
         }

@@ -1,7 +1,7 @@
 package com.yj.monitor.admin.service;
 
 import com.yj.monitor.admin.config.AdminMonitorConfig;
-import com.yj.monitor.admin.domain.ClientContainer;
+import com.yj.monitor.admin.domain.RegisterCenter;
 import com.yj.monitor.admin.handler.AdminHeartBeatHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -34,6 +34,8 @@ public class HeartBeatService {
 
     @Resource
     private AdminMonitorConfig adminMonitorConfig;
+    @Resource
+    private AdminHeartBeatHandler adminHeartBeatHandler;
 
     public void heartListen() {
         EventLoopGroup boss = new NioEventLoopGroup();
@@ -51,7 +53,7 @@ public class HeartBeatService {
                             pipeline.addLast(new IdleStateHandler(adminMonitorConfig.getHeart().getReaderIdleTime(),
                                     adminMonitorConfig.getHeart().getWriterIdleTime(),
                                     adminMonitorConfig.getHeart().getAllIdleTime(), TimeUnit.SECONDS));
-                            pipeline.addLast(new AdminHeartBeatHandler());
+                            pipeline.addLast(adminHeartBeatHandler);
                         }
                     });
             ChannelFuture future = bootstrap.bind(adminMonitorConfig.getHeart().getPort()).sync();
@@ -62,7 +64,7 @@ public class HeartBeatService {
         } finally {
             worker.shutdownGracefully();
             boss.shutdownGracefully();
-            ClientContainer.clear();
+            RegisterCenter.clear();
         }
     }
 

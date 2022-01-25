@@ -2,8 +2,8 @@ package com.yj.monitor.admin.runner;
 
 import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEventProducer;
-import com.yj.monitor.admin.domain.ClientContainer;
-import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.admin.domain.RegisterCenter;
+import com.yj.monitor.api.domain.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -27,13 +27,13 @@ public class PullMonitorTask implements Runnable {
 
     @Override
     public void run() {
-        List<Client> clients = ClientContainer.onlineClient();
-        if (CollectionUtils.isEmpty(clients)) {
+        List<Node> nodes = RegisterCenter.onlineClient();
+        if (CollectionUtils.isEmpty(nodes)) {
             return;
         }
-        logger.info("Current online node: {}", JSON.toJSONString(clients));
-        for (Client client : clients) {
-            monitorEventProducer.onData(client);
+        logger.info("Current online node: {}", JSON.toJSONString(nodes));
+        for (Node node : nodes) {
+            monitorEventProducer.onData(node);
         }
     }
 }

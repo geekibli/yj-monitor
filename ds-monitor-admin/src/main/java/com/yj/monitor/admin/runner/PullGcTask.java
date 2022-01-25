@@ -8,7 +8,7 @@ import com.yj.monitor.admin.entity.MonitorGc;
 import com.yj.monitor.api.constant.MonitorMethods;
 import com.yj.monitor.api.domain.Method;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
-import com.yj.monitor.api.rsp.RemoteInvokeRspVO;
+import com.yj.monitor.api.rsp.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +41,14 @@ public class PullGcTask implements Callable<MonitorGc> {
             return null;
         }
 
-        String body = remoteInvoke(monitorEvent.getClient().getMonitorUrl(), MonitorMethods.GC, null);
+        String body = remoteInvoke(monitorEvent.getNode().getMonitorUrl(), MonitorMethods.GC, null);
 
         MonitorGc gc = new MonitorGc();
         gc.setBatchId(monitorEvent.getBatchId());
-        gc.setClientAddress(monitorEvent.getClient().getAddress());
-        gc.setClientId(monitorEvent.getClient().getClientId());
+        gc.setClientAddress(monitorEvent.getNode().getAddress());
+        gc.setClientId(monitorEvent.getNode().getClientId());
 
-        RemoteInvokeRspVO invokeRspVO = JSON.parseObject(body, RemoteInvokeRspVO.class);
+        Response invokeRspVO = JSON.parseObject(body, Response.class);
         Map<String, Map<String, Integer>> map = (Map<String, Map<String, Integer>>) invokeRspVO.getData();
 
         Map<String, Integer> sweepMap = map.get("PS MarkSweep");
@@ -68,7 +68,7 @@ public class PullGcTask implements Callable<MonitorGc> {
         gc.setMemoryAllocatedCount(getMemoryAllocated());
         gc.setMemoryPromotedCount(getMemoryPromoted());
 
-        Map<String, Long> pauseMap = getGcPause(monitorEvent.getClient().getPort());
+        Map<String, Long> pauseMap = getGcPause(monitorEvent.getNode().getClientPort());
         gc.setPauseCount(pauseMap.get("COUNT"));
         gc.setPauseMax(pauseMap.get("MAX"));
         // TODO
@@ -79,25 +79,25 @@ public class PullGcTask implements Callable<MonitorGc> {
     }
 
     public Long getLiveDataSize() {
-        return getMeasurementFirstVal(MonitorMethods.JVM_GC_LIVE_DATA_SIZE, monitorEvent.getClient().getPort());
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_LIVE_DATA_SIZE, monitorEvent.getNode().getClientPort());
     }
 
     public Long getMaxDataSize() {
-        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MAX_DATA_SIZE, monitorEvent.getClient().getPort());
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MAX_DATA_SIZE, monitorEvent.getNode().getClientPort());
     }
 
     public Long getMemoryAllocated() {
-        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_ALLOCATED, monitorEvent.getClient().getPort());
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_ALLOCATED, monitorEvent.getNode().getClientPort());
     }
 
     public Long getMemoryPromoted() {
-        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_PROMOTED, monitorEvent.getClient().getPort());
+        return getMeasurementFirstVal(MonitorMethods.JVM_GC_MEMORY_PROMOTED, monitorEvent.getNode().getClientPort());
     }
 
     private Long getMeasurementFirstVal(Method method, Integer clientPort) {
         Object[] param = new Object[1];
         param[0] = clientPort;
-        String body = remoteInvoke(monitorEvent.getClient().getActuatorMetricsUrl(), method, param);
+        String body = remoteInvoke(monitorEvent.getNode().getActuatorMetricsUrl(), method, param);
         if (StringUtils.isEmpty(body)) {
             throw new RuntimeException();
         }
@@ -117,7 +117,7 @@ public class PullGcTask implements Callable<MonitorGc> {
     public Map<String, Long> getGcPause(Integer clientPort) {
         Object[] param = new Object[1];
         param[0] = clientPort;
-        String body = remoteInvoke(monitorEvent.getClient().getActuatorMetricsUrl(), MonitorMethods.JVM_GC_PAUSE, param);
+        String body = remoteInvoke(monitorEvent.getNode().getActuatorMetricsUrl(), MonitorMethods.JVM_GC_PAUSE, param);
         JSONObject data = JSON.parseObject(body).getJSONObject("data");
         List<Measurement> measurements = data.getJSONArray("measurements").toJavaList(Measurement.class);
         if (measurements.isEmpty()) {

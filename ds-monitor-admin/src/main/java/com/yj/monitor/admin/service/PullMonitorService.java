@@ -40,7 +40,9 @@ public class PullMonitorService {
      */
     public synchronized void execute() {
         logger.info("【 Monitor admin 】start schedule job. ");
-        MonitorScheduleExecutor.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 0, 30, TimeUnit.SECONDS);
+        // 确保初次演示时间要在第一次心跳检测之后触发, 保证address已经确保初始化了
+        // initialDelay > heart interval
+        MonitorScheduleExecutor.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 60, 30, TimeUnit.SECONDS);
     }
 
 

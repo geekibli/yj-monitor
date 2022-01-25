@@ -1,6 +1,6 @@
 package com.yj.monitor.admin.domain;
 
-import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.api.domain.Node;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -14,25 +14,25 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2022/1/20 下午12:23
  * @Version 1.0
  */
-public class ClientContainer {
+public class RegisterCenter {
 
-    private static final ConcurrentHashMap<String, Client> CLIENT_CONTAINER = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Node> CLIENT_CONTAINER = new ConcurrentHashMap<>();
 
     private static final HashSet<String> MARKED_CLIENT = new HashSet<>();
 
-    public static void online(String key, Client client) {
-        CLIENT_CONTAINER.put(key, client);
+    public static void online(String key, Node node) {
+        CLIENT_CONTAINER.put(key, node);
     }
 
     public static void offline(String key) {
         CLIENT_CONTAINER.remove(key);
     }
 
-    public static ConcurrentHashMap<String, Client> onlineClientMap() {
+    public static ConcurrentHashMap<String, Node> onlineClientMap() {
         return CLIENT_CONTAINER;
     }
 
-    public static List<Client> onlineClient() {
+    public static List<Node> onlineClient() {
         return new ArrayList<>(CLIENT_CONTAINER.values());
     }
 
@@ -44,22 +44,21 @@ public class ClientContainer {
         CLIENT_CONTAINER.clear();
     }
 
-    public static boolean existed(String key) {
+    public static boolean isOnline(String key) {
         return CLIENT_CONTAINER.get(key) != null;
     }
 
 
     public static void markAddress(String address, String clientId) {
-
         if (MARKED_CLIENT.contains(clientId)) {
             return;
         }
 
-        Client client = CLIENT_CONTAINER.get(clientId);
-        if (client == null) {
+        Node node = CLIENT_CONTAINER.get(clientId);
+        if (node == null) {
             throw new RuntimeException("Not found client for " + clientId);
         }
-        client.setAddress(address);
+        node.setAddress(address);
         MARKED_CLIENT.add(clientId);
     }
 
@@ -76,9 +75,9 @@ public class ClientContainer {
     }
 
     public static String findClientId(String address) {
-        for (Map.Entry<String, Client> entry : CLIENT_CONTAINER.entrySet()) {
-            Client client = entry.getValue();
-            if (client.getAddress().equals(address)) {
+        for (Map.Entry<String, Node> entry : CLIENT_CONTAINER.entrySet()) {
+            Node node = entry.getValue();
+            if (node.getAddress().equals(address)) {
                 return entry.getKey();
             }
         }

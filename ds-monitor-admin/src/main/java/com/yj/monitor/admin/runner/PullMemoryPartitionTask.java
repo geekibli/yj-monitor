@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorMemoryPartition;
 import com.yj.monitor.api.constant.MonitorMethods;
-import com.yj.monitor.api.domain.Client;
+import com.yj.monitor.api.domain.Node;
 import com.yj.monitor.api.domain.MemoryPartition;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
             return null;
         }
 
-        HttpResponse response = HttpUtil.createPost(monitorEvent.getClient().getMonitorUrl())
+        HttpResponse response = HttpUtil.createPost(monitorEvent.getNode().getMonitorUrl())
                 .header(Header.CONTENT_TYPE, ContentType.JSON.getValue())
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.MEMORY_PARTITION.getcName(), MonitorMethods.MEMORY_PARTITION.getmName(), new Object[0])))
                 .execute();
@@ -56,8 +56,9 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
                 .map(partition -> {
                     MonitorMemoryPartition memoryPartition = new MonitorMemoryPartition();
                     memoryPartition.setBatchId(monitorEvent.getBatchId());
-                    memoryPartition.setClientAddress(monitorEvent.getClient().getAddress());
-                    memoryPartition.setClientId(monitorEvent.getClient().getClientId());
+                    memoryPartition.setClientAddress(monitorEvent.getNode().getAddress());
+                    memoryPartition.setClientId(monitorEvent.getNode().getClientId());
+                    memoryPartition.setPartitionName(partition.getName());
                     BeanUtils.copyProperties(partition, memoryPartition);
                     return memoryPartition;
                 }).collect(Collectors.toList());
@@ -66,11 +67,11 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
 
     public static void main(String[] args) throws Exception {
         MonitorEvent event = new MonitorEvent();
-        Client client = new Client();
+        Node node = new Node();
         event.setBatchId(111L);
-        client.setActuatorMetricsUrl("http://127.0.0.1:10000/actuator-metrics");
-        client.setMonitorUrl("http://127.0.0.1:10000/monitor");
-        event.setClient(client);
+        node.setActuatorMetricsUrl("http://127.0.0.1:10000/actuator-metrics");
+        node.setMonitorUrl("http://127.0.0.1:10000/monitor");
+        event.setNode(node);
         List<MonitorMemoryPartition> call = new PullMemoryPartitionTask(event).call();
         System.err.println("call " + JSON.toJSONString(call));
     }

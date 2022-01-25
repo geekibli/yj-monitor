@@ -3,7 +3,7 @@ package com.yj.monitor.core.rpc;
 import com.alibaba.fastjson.JSON;
 import com.yj.monitor.api.constant.RemoteInvokeStatus;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
-import com.yj.monitor.api.rsp.RemoteInvokeRspVO;
+import com.yj.monitor.api.rsp.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class RemoteInvoke {
      */
     @ResponseBody
     @RequestMapping(value = "/monitor", method = RequestMethod.POST)
-    public RemoteInvokeRspVO invoke(@RequestBody RemoteMonitorReqVO reqVO) {
+    public Response invoke(@RequestBody RemoteMonitorReqVO reqVO) {
         return doInvoke(reqVO);
     }
 
@@ -37,26 +37,26 @@ public class RemoteInvoke {
         return metric(reqVO);
     }
 
-    private RemoteInvokeRspVO doInvoke(RemoteMonitorReqVO reqVO) {
+    private Response doInvoke(RemoteMonitorReqVO reqVO) {
         logger.info("Remote invoke req: {}", JSON.toJSONString(reqVO));
         try {
             Object invoke = doReflect(reqVO);
-            return RemoteInvokeRspVO.successData(invoke);
+            return Response.successData(invoke);
         } catch (ClassNotFoundException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
+            return Response.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
         } catch (NoSuchMethodException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
+            return Response.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
         } catch (IllegalAccessException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
+            return Response.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
         } catch (InvocationTargetException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
+            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
         } catch (InstantiationException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
+            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
         }
     }
 
@@ -66,19 +66,19 @@ public class RemoteInvoke {
             return doReflect(reqVO);
         } catch (ClassNotFoundException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
+            return Response.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
         } catch (NoSuchMethodException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
+            return Response.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
         } catch (IllegalAccessException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
+            return Response.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
         } catch (InvocationTargetException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
+            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
         } catch (InstantiationException e) {
             logger.error("Reflect invoke error!", e);
-            return RemoteInvokeRspVO.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
+            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
         }
     }
 
