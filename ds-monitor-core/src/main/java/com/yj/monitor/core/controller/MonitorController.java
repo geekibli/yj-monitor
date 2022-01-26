@@ -1,7 +1,7 @@
 package com.yj.monitor.core.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.yj.monitor.core.handler.MonitorHandler;
+import com.yj.monitor.core.handler.JDKManagementHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,51 +18,51 @@ import javax.annotation.Resource;
 public class MonitorController {
 
     @Resource
-    private MonitorHandler monitorHandler;
+    private JDKManagementHandler JDKManagementHandler;
 
     @RequestMapping("memory")
     public String memory() {
-        return JSON.toJSONString(monitorHandler.getMemoryInfo());
+        return JSON.toJSONString(JDKManagementHandler.getMemoryInfo());
     }
 
     @RequestMapping("gc")
     public String gc() {
-        return JSON.toJSONString(monitorHandler.getGcInfo());
+        return JSON.toJSONString(JDKManagementHandler.getGcInfo());
     }
 
     @RequestMapping("runtime")
     public String runtime() {
-        return JSON.toJSONString(monitorHandler.getRuntimeInfo());
+        return JSON.toJSONString(JDKManagementHandler.getRuntimeInfo());
     }
 
     @RequestMapping("classLoad")
     public String classLoad() {
-        return JSON.toJSONString(monitorHandler.getClassLoader());
+        return JSON.toJSONString(JDKManagementHandler.getClassLoader());
     }
 
     @RequestMapping("compilation")
     public String compilation() {
-        return JSON.toJSONString(monitorHandler.getCompilation());
+        return JSON.toJSONString(JDKManagementHandler.getCompilation());
     }
 
     @RequestMapping("operatingSystem")
     public String operatingSystemInfo() {
-        return JSON.toJSONString(monitorHandler.getOperatingSystemInfo());
+        return JSON.toJSONString(JDKManagementHandler.getOperatingSystemInfo());
     }
 
     @RequestMapping("systemProperties")
     public String systemProperties() {
-        return JSON.toJSONString(monitorHandler.getSystemProperties());
+        return JSON.toJSONString(JDKManagementHandler.getSystemProperties());
     }
 
     @RequestMapping("thread")
     public String thread() {
-        return JSON.toJSONString(monitorHandler.getThreadInfo());
+        return JSON.toJSONString(JDKManagementHandler.getThreadInfo());
     }
 
     @RequestMapping("memory-partition")
     public String memoryPartition() {
-        return JSON.toJSONString(monitorHandler.getMemoryPartition());
+        return JSON.toJSONString(JDKManagementHandler.getMemoryPartition());
     }
 
 }

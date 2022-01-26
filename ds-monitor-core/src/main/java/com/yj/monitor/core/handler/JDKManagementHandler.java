@@ -2,9 +2,12 @@ package com.yj.monitor.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.yj.monitor.api.domain.Mem;
 import com.yj.monitor.api.domain.MemoryPartition;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import oshi.SystemInfo;
+
 
 import java.lang.management.*;
 import java.text.DecimalFormat;
@@ -17,7 +20,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class MonitorHandler {
+public class JDKManagementHandler {
 
     public Map<String, String> getRuntimeInfo() {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
@@ -57,21 +60,26 @@ public class MonitorHandler {
         return map;
     }
 
-    public Map<String, String> getMemoryInfo() {
+    public Mem getMemoryInfo() {
         MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
-        HashMap<String, String> map = new HashMap<String, String>();
         MemoryUsage heap = mxb.getHeapMemoryUsage();
-        map.put("heap.max", heap.getMax() + "");
-        map.put("heap.committed", heap.getCommitted() + "");
-        map.put("heap.used", heap.getUsed() + "");
-        map.put("heap.init", heap.getInit() + "");
-
+        Mem mem = new Mem();
+        mem.setHeapCommitted(heap.getCommitted());
+        mem.setHeapInit(heap.getInit());
+        mem.setHeapMax(heap.getMax());
+        mem.setHeapUsed(heap.getUsed());
         MemoryUsage nonHeap = mxb.getNonHeapMemoryUsage();
-        map.put("nonHeap.init", nonHeap.getInit() + "");
-        map.put("nonHeap.used", nonHeap.getUsed() + "");
-        map.put("nonHeap.committed", nonHeap.getCommitted() + "");
-        map.put("nonHeap.max", nonHeap.getMax() + "");
-        return map;
+        mem.setNonHeapCommitted(nonHeap.getCommitted());
+        mem.setNonHeapInit(nonHeap.getInit());
+        mem.setNonHeapMax(nonHeap.getMax());
+        mem.setNonHeapUsed(nonHeap.getUsed());
+
+//        com.sun.management.OperatingSystemMXBean osmxb = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+//        map.put("freePhysicalMemorySize", osmxb.getFreePhysicalMemorySize());
+//        map.put("totalPhysicalMemorySize", osmxb.getTotalPhysicalMemorySize());
+//        map.put("freeSwapSpaceSize", osmxb.getFreeSwapSpaceSize());
+//        map.put("totalSwapSpaceSize", osmxb.getTotalSwapSpaceSize());
+        return mem;
     }
 
     public Map<String, String> getThreadInfo() {
@@ -127,7 +135,7 @@ public class MonitorHandler {
     }
 
 
-    private String formatSize(long size) {
+    private static String formatSize(long size) {
         String hrSize;
         double b = size;
         double k = size / 1024.0;
@@ -208,5 +216,32 @@ public class MonitorHandler {
             joiner.add(var);
         }
         return joiner.toString();
+    }
+
+
+    public static void main(String[] args) {
+
+        MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
+        HashMap<String, String> map = new HashMap<String, String>();
+        MemoryUsage heap = mxb.getHeapMemoryUsage();
+        map.put("heap.max", formatSize(heap.getMax()) + "");
+        map.put("heap.committed", formatSize(heap.getCommitted()) + "");
+        map.put("heap.used", formatSize(heap.getUsed()) + "");
+        map.put("heap.init", formatSize(heap.getInit()) + "");
+
+        MemoryUsage nonHeap = mxb.getNonHeapMemoryUsage();
+        map.put("nonHeap.init", formatSize(nonHeap.getInit()) + "");
+        map.put("nonHeap.used", formatSize(nonHeap.getUsed()) + "");
+        map.put("nonHeap.committed", formatSize(nonHeap.getCommitted()) + "");
+        map.put("nonHeap.max", formatSize(nonHeap.getMax()) + "");
+
+        com.sun.management.OperatingSystemMXBean osmxb = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        map.put("freePhysicalMemorySize", formatSize(osmxb.getFreePhysicalMemorySize()));
+        map.put("totalPhysicalMemorySize()", formatSize(osmxb.getTotalPhysicalMemorySize()));
+        map.put("freeSwapSpaceSize", formatSize(osmxb.getFreeSwapSpaceSize()));
+        map.put("totalSwapSpaceSize", formatSize(osmxb.getTotalSwapSpaceSize()));
+
+        System.out.println(JSON.toJSONString(map));
+
     }
 }

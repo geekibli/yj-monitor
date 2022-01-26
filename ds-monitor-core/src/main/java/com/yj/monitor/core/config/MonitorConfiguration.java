@@ -7,10 +7,13 @@ import com.yj.monitor.api.util.Rc4Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
+import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
+import oshi.SystemInfo;
 
 import javax.annotation.Resource;
 
@@ -30,7 +33,6 @@ public class MonitorConfiguration {
 
     @Value(value = "${spring.application.name}")
     private String applicationName;
-
 
     @Resource
     private DsMonitorProperties monitorProperties;
@@ -70,6 +72,16 @@ public class MonitorConfiguration {
         config.setHeartPort(monitorProperties.getHeartPort());
         logger.info(" ==============================  Load client monitor config ============================== \n    {}", JSON.toJSONString(config));
         return config;
+    }
+
+    @Bean
+    public HttpTraceRepository buildHttpTraceRepository() {
+        return new InMemoryHttpTraceRepository();
+    }
+
+    @Bean
+    public SystemInfo systemInfo(){
+        return new SystemInfo();
     }
 
 }

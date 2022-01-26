@@ -9,7 +9,7 @@ import com.yj.monitor.api.constant.RemoteAPI;
 import com.yj.monitor.api.domain.Node;
 import com.yj.monitor.api.req.ClientRegisterReqVO;
 import com.yj.monitor.core.config.MonitorConfig;
-import com.yj.monitor.core.handler.MonitorHandler;
+import com.yj.monitor.core.handler.JDKManagementHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class ClientRegisterService {
     @Resource
     private ClientHeartService clientHeartService;
     @Resource
-    private MonitorHandler monitorHandler;
+    private JDKManagementHandler JDKManagementHandler;
 
     /**
      * 1、把当前结点信息注册到admin
@@ -110,7 +110,7 @@ public class ClientRegisterService {
         node.setAuthToken(monitorConfig.getAuthToken());
         node.setMonitorUrl("http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getApplicationPort() + RemoteAPI.MONITOR_PULL);
         node.setActuatorMetricsUrl("http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getApplicationPort() + RemoteAPI.ACTUATOR_METRICS);
-        Map<String, String> operatingSystemInfo = monitorHandler.getOperatingSystemInfo();
+        Map<String, String> operatingSystemInfo = JDKManagementHandler.getOperatingSystemInfo();
         node.setSystemType(operatingSystemInfo.get("Name"));
 
         logger.info("client name {}", JSON.toJSONString(node));
