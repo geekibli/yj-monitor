@@ -1,6 +1,9 @@
 package com.yj.monitor.admin.config;
 
 import com.alibaba.fastjson.JSON;
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,18 +36,25 @@ public class AdminMonitorConfiguration {
     @Bean(name = "adminMonitorConfig")
     public AdminMonitorConfig getConfig() {
         AdminMonitorConfig config = new AdminMonitorConfig();
-        config.setMemory(adminProperties.getMemory());
-        config.setGc(adminProperties.getGc());
-        config.setRuntime(adminProperties.getRuntime());
-        config.setThread(adminProperties.getThread());
         config.setServerPort(adminProperties.getServerPort());
         config.setThreadPool(adminProperties.getThreadPool());
         config.setApplicationName(applicationName);
         config.setHeart(adminProperties.getHeart());
         config.setServerPort(serverPort);
+        config.setPullTask(adminProperties.getPullTask());
         logger.info("admin config " + JSON.toJSONString(config));
         return config;
     }
 
+
+    @Bean
+    public StringDecoder getStringDecoder(){
+        return new StringDecoder();
+    }
+
+    @Bean
+    public StringEncoder getStringEncoder(){
+        return new StringEncoder();
+    }
 
 }

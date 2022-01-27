@@ -16,7 +16,7 @@ public class MonitorEventHandler implements EventHandler<MonitorEvent> {
 
     private final Logger logger = LoggerFactory.getLogger(MonitorEventHandler.class);
 
-    private PullMonitorService pullMonitorService;
+    private final PullMonitorService pullMonitorService;
 
     public MonitorEventHandler(PullMonitorService pullMonitorService) {
         this.pullMonitorService = pullMonitorService;
@@ -28,6 +28,7 @@ public class MonitorEventHandler implements EventHandler<MonitorEvent> {
             pullMonitorService.handleDisruptor(monitorEvent, l, b);
         } catch (Exception e) {
             logger.error("onEvent ....", e);
+            // TODO record and alarm
         }
     }
 }

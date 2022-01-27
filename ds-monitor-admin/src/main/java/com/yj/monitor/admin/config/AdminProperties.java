@@ -15,15 +15,20 @@ public class AdminProperties {
     private AuthConfig defaultAuth;
     private ThreadPoolConfig threadPool;
     private HeartConfig heart;
-    private AdminMonitorConfig.ScheduleConfig memory;
-    private AdminMonitorConfig.ScheduleConfig runtime;
-    private AdminMonitorConfig.ScheduleConfig gc;
-    private AdminMonitorConfig.ScheduleConfig thread;
+    private AdminMonitorConfig.ScheduleConfig pullTask;
 
-
-    static class ScheduleConfig{
+    static class ScheduleConfig {
+        private Boolean open;
         private Long delay;
         private Long initialDelay;
+
+        public Boolean getOpen() {
+            return open;
+        }
+
+        public void setOpen(Boolean open) {
+            this.open = open;
+        }
 
         public Long getDelay() {
             return delay;
@@ -67,43 +72,19 @@ public class AdminProperties {
         this.threadPool = threadPool;
     }
 
-    public AdminMonitorConfig.ScheduleConfig getMemory() {
-        return memory;
-    }
-
-    public void setMemory(AdminMonitorConfig.ScheduleConfig memory) {
-        this.memory = memory;
-    }
-
-    public AdminMonitorConfig.ScheduleConfig getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(AdminMonitorConfig.ScheduleConfig runtime) {
-        this.runtime = runtime;
-    }
-
-    public AdminMonitorConfig.ScheduleConfig getGc() {
-        return gc;
-    }
-
-    public void setGc(AdminMonitorConfig.ScheduleConfig gc) {
-        this.gc = gc;
-    }
-
-    public AdminMonitorConfig.ScheduleConfig getThread() {
-        return thread;
-    }
-
-    public void setThread(AdminMonitorConfig.ScheduleConfig thread) {
-        this.thread = thread;
-    }
-
     public HeartConfig getHeart() {
         return heart;
     }
 
     public void setHeart(HeartConfig heart) {
         this.heart = heart;
+    }
+
+    public AdminMonitorConfig.ScheduleConfig getPullTask() {
+        return pullTask;
+    }
+
+    public void setPullTask(AdminMonitorConfig.ScheduleConfig pullTask) {
+        this.pullTask = pullTask;
     }
 }

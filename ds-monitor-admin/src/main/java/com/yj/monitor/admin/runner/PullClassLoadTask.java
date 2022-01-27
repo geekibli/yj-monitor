@@ -49,7 +49,7 @@ public class PullClassLoadTask implements Callable<MonitorClassLoad> {
         MonitorClassLoad mcl = new MonitorClassLoad();
 
         mcl.setBatchId(monitorEvent.getBatchId());
-        mcl.setClientAddress(monitorEvent.getNode().getAddress());
+        mcl.setClientAddress(monitorEvent.getNode().getClientUrl());
         mcl.setClientId(monitorEvent.getNode().getClientId());
         mcl.setLoadedClassCount(classLoad.getLoaderClassCount());
         mcl.setTotalLoadedClassCount(classLoad.getTotalLoaderClassCount());

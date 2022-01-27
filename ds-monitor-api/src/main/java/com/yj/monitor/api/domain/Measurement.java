@@ -1,6 +1,7 @@
 package com.yj.monitor.api.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @Author gaolei
@@ -12,7 +13,7 @@ public class Measurement implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String statistic;
-    private String value;
+    private BigDecimal value;
 
     public Measurement() {
     }
@@ -25,11 +26,11 @@ public class Measurement implements Serializable {
         this.statistic = statistic;
     }
 
-    public String getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 }

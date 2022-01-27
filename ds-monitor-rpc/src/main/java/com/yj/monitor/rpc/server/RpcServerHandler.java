@@ -3,11 +3,14 @@ package com.yj.monitor.rpc.server;
 import com.alibaba.fastjson.JSON;
 import com.yj.monitor.rpc.config.RpcContainer;
 import com.yj.monitor.rpc.domain.RpcRequest;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 
 /**
@@ -15,11 +18,14 @@ import java.lang.reflect.Method;
  * @Date 2021/3/6 6:34 下午
  * @Version 1.0
  */
+@Component
+@ChannelHandler.Sharable
 public class RpcServerHandler<T> extends ChannelInboundHandlerAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(RpcServerHandler.class);
 
-    private RpcContainer<T> rpcContainer;
+    @Resource
+    private RpcContainer rpcContainer;
 
     public RpcServerHandler(RpcContainer<T> rpcContainer) {
         this.rpcContainer = rpcContainer;

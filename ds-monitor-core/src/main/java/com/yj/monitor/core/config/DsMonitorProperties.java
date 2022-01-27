@@ -19,6 +19,7 @@ public class DsMonitorProperties {
     private Boolean retry;
     private Integer retryTime;
     private Integer heartPort;
+    private Integer heartInterval;
     private String clientId;
 
     public DsMonitorProperties() {
@@ -94,5 +95,13 @@ public class DsMonitorProperties {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public Integer getHeartInterval() {
+        return heartInterval;
+    }
+
+    public void setHeartInterval(Integer heartInterval) {
+        this.heartInterval = heartInterval;
     }
 }

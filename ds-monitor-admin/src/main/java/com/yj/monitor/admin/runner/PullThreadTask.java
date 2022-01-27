@@ -48,7 +48,7 @@ public class PullThreadTask implements Callable<MonitorThread> {
         JmxThread thread = monitorApi.getThread();
         MonitorThread mt = new MonitorThread();
         mt.setBatchId(monitorEvent.getBatchId());
-        mt.setClientAddress(monitorEvent.getNode().getAddress());
+        mt.setClientAddress(monitorEvent.getNode().getClientUrl());
         mt.setClientId(monitorEvent.getNode().getClientId());
 
         mt.setDaemonCount(Long.valueOf(thread.getDaemonThreadCount()));

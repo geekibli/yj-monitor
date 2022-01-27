@@ -1,6 +1,6 @@
 package com.yj.monitor.rpc.server;
 
-import com.yj.monitor.rpc.config.RpcContainer;
+import com.yj.monitor.rpc.handler.ObjectDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -8,13 +8,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 
@@ -33,7 +31,11 @@ public class RpcServer implements InitializingBean {
     private Integer port;
 
     @Resource
-    private RpcContainer rpcContainer;
+    private RpcServerHandler rpcServerHandler;
+
+    @Resource
+    private ObjectEncoder objectEncoder;
+
 
     @Override
     public void afterPropertiesSet() {
@@ -43,8 +45,8 @@ public class RpcServer implements InitializingBean {
     }
 
     private void start() {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        EventLoopGroup workerGroup = new NioEventLoopGroup(8);
         ServerBootstrap server = new ServerBootstrap();
         server.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -57,9 +59,9 @@ public class RpcServer implements InitializingBean {
                         int fieldLength = 4;
                         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, fieldLength, 0, fieldLength));
                         pipeline.addLast(new LengthFieldPrepender(fieldLength));
-                        pipeline.addLast("encoder", new ObjectEncoder());
+                        pipeline.addLast("encoder", objectEncoder);
                         pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                        pipeline.addLast(new RpcServerHandler(rpcContainer));
+                        pipeline.addLast(rpcServerHandler);
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)

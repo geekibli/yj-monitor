@@ -14,9 +14,6 @@ import javax.annotation.Resource;
 @Service
 public class ServerService {
 
-    @Resource
-    private RemoteInvokeHandler remoteInvokeHandler;
-
 
     public Server getServer() {
 

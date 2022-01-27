@@ -1,6 +1,7 @@
 package com.yj.monitor.core.service;
 
 import cn.hutool.system.oshi.OshiUtil;
+import com.alibaba.fastjson.JSON;
 import com.yj.monitor.api.domain.*;
 import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.core.config.MonitorConfig;
@@ -98,13 +99,11 @@ public class MonitorService implements MonitorApi {
         gc.setMaxDataSize(springBootActuatorHandler.getGcMaxDataSizeVal(port));
         gc.setMemoryAllocatedCount(springBootActuatorHandler.getGcMemoryAllocatedVal(port));
         gc.setMemoryPromotedCount(springBootActuatorHandler.getGcMemoryPromotedVal(port));
-        Map<String, String> pauseMap = springBootActuatorHandler.getGcPauseMap(port);
+        Map<String, BigDecimal> pauseMap = springBootActuatorHandler.getGcPauseMap(port);
         // todo
-        gc.setPauseCount(new BigDecimal(pauseMap.get("COUNT")).longValue());
-        gc.setPauseMax(new BigDecimal(pauseMap.get("MAX")).longValue());
-        if (pauseMap.get("TOTAL_TIME") != null) {
-            gc.setPauseTotalTime(new BigDecimal(pauseMap.get("TOTAL_TIME")).doubleValue());
-        }
+        gc.setPauseCount(pauseMap.get("COUNT").longValue());
+        gc.setPauseMax(pauseMap.get("MAX").longValue());
+        gc.setPauseTotalTime(pauseMap.get("TOTAL_TIME").doubleValue());
         return gc;
     }
 

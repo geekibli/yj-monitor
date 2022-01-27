@@ -50,7 +50,7 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
 
         MonitorMemory memory = new MonitorMemory();
         memory.setBatchId(monitorEvent.getBatchId());
-        memory.setClientAddress(monitorEvent.getNode().getAddress());
+        memory.setClientAddress(monitorEvent.getNode().getClientUrl());
         memory.setClientId(monitorEvent.getNode().getClientId());
 
         memory.setHeapCommitted(memInfo.getHeapCommitted());

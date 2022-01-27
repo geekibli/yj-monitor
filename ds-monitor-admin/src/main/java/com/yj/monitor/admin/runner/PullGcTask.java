@@ -52,7 +52,7 @@ public class PullGcTask implements Callable<MonitorGc> {
         GarbageCollection gcInfo = monitorApi.getGcInfo();
         MonitorGc mgc = new MonitorGc();
         mgc.setBatchId(monitorEvent.getBatchId());
-        mgc.setClientAddress(monitorEvent.getNode().getAddress());
+        mgc.setClientAddress(monitorEvent.getNode().getClientUrl());
         mgc.setClientId(monitorEvent.getNode().getClientId());
         mgc.setPsMarksweepCollectionCount(gcInfo.getPsMarksweepCollectionCount().intValue());
         mgc.setPsMarksweepCollectionTime(gcInfo.getPsMarksweepCollectionTime().intValue());
@@ -77,7 +77,7 @@ public class PullGcTask implements Callable<MonitorGc> {
 
         MonitorGc gc = new MonitorGc();
         gc.setBatchId(monitorEvent.getBatchId());
-        gc.setClientAddress(monitorEvent.getNode().getAddress());
+        gc.setClientAddress(monitorEvent.getNode().getClientUrl());
         gc.setClientId(monitorEvent.getNode().getClientId());
 
         Response invokeRspVO = JSON.parseObject(body, Response.class);

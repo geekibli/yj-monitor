@@ -14,8 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +37,8 @@ public class SpringBootActuatorHandler {
     }
 
     public Long getGcLiveDataSizeVal(Integer port) {
-        String val = getMeasurementFirstVal(MetricName.JVM_GC_LIVE_DATA_SIZE, port);
-        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+        BigDecimal val = getMeasurementFirstVal(MetricName.JVM_GC_LIVE_DATA_SIZE, port);
+        return val == null ? 0L : val.longValue();
     }
 
     public Response getGcMaxDataSize(Integer port) {
@@ -44,8 +46,8 @@ public class SpringBootActuatorHandler {
     }
 
     public Long getGcMaxDataSizeVal(Integer port) {
-        String val = getMeasurementFirstVal(MetricName.JVM_GC_MAX_DATA_SIZE, port);
-        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+        BigDecimal val = getMeasurementFirstVal(MetricName.JVM_GC_MAX_DATA_SIZE, port);
+        return val == null ? 0L : val.longValue();
     }
 
     public Response getGcMemoryAllocated(Integer port) {
@@ -53,8 +55,8 @@ public class SpringBootActuatorHandler {
     }
 
     public Long getGcMemoryAllocatedVal(Integer port) {
-        String val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_ALLOCATED, port);
-        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+        BigDecimal val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_ALLOCATED, port);
+        return val == null ? 0L : val.longValue();
     }
 
     public Response getGcMemoryPromoted(Integer port) {
@@ -62,15 +64,15 @@ public class SpringBootActuatorHandler {
     }
 
     public Long getGcMemoryPromotedVal(Integer port) {
-        String val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_PROMOTED, port);
-        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+        BigDecimal val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_PROMOTED, port);
+        return val == null ? 0L : val.longValue();
     }
 
     public Response getGcPause(Integer port) {
         return Response.successData(metric(MetricName.JVM_GC_PAUSE, port));
     }
 
-    public Map<String, String> getGcPauseMap(Integer port) {
+    public Map<String, BigDecimal> getGcPauseMap(Integer port) {
         String body = metric(MetricName.JVM_GC_PAUSE, port);
         if (StringUtils.isEmpty(body)) {
             return null;
@@ -96,15 +98,12 @@ public class SpringBootActuatorHandler {
 
 
     public String getSystemCpuUsageVal(Integer port) {
-        return getMeasurementFirstVal(MetricName.SYSTEM_CPU_USAGE, port);
+        return Objects.requireNonNull(getMeasurementFirstVal(MetricName.SYSTEM_CPU_USAGE, port)).toString();
     }
 
 
-    private String getMeasurementFirstVal(String metricName, Integer port) {
+    private BigDecimal getMeasurementFirstVal(String metricName, Integer port) {
         String body = metric(metricName, port);
-        if (StringUtils.isEmpty(body)) {
-            return null;
-        }
         List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
         if (measurements.isEmpty()) {
             return null;

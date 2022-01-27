@@ -80,7 +80,7 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
     private MonitorMemoryPartition convert(MemoryPartition partition) {
         MonitorMemoryPartition memoryPartition = new MonitorMemoryPartition();
         memoryPartition.setBatchId(monitorEvent.getBatchId());
-        memoryPartition.setClientAddress(monitorEvent.getNode().getAddress());
+        memoryPartition.setClientAddress(monitorEvent.getNode().getClientUrl());
         memoryPartition.setClientId(monitorEvent.getNode().getClientId());
         memoryPartition.setPartitionName(partition.getName());
         BeanUtils.copyProperties(partition, memoryPartition);

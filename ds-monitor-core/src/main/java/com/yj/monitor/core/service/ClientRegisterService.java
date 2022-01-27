@@ -107,6 +107,7 @@ public class ClientRegisterService {
         node.setClientId(monitorConfig.getClientId());
         node.setAuthToken(monitorConfig.getAuthToken());
         String url = "http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getApplicationPort();
+        node.setClientUrl(url);
         node.setMonitorUrl(url + RemoteAPI.MONITOR_PULL);
         node.setActuatorMetricsUrl(url + RemoteAPI.ACTUATOR_METRICS);
         node.setSystemType(OshiUtil.getOs().getFamily());

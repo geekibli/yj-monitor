@@ -17,6 +17,13 @@ public class Node implements Serializable {
     private String clientHost;
     private Integer clientPort;
     private String clientId;
+    /**
+     * host + port
+     */
+    private String clientUrl;
+    /**
+     * heart address
+     */
     private String address;
     private String applicationName;
     private String systemType;
@@ -120,5 +127,13 @@ public class Node implements Serializable {
 
     public void setRpcAddress(String rpcAddress) {
         this.rpcAddress = rpcAddress;
+    }
+
+    public String getClientUrl() {
+        return clientUrl;
+    }
+
+    public void setClientUrl(String clientUrl) {
+        this.clientUrl = clientUrl;
     }
 }

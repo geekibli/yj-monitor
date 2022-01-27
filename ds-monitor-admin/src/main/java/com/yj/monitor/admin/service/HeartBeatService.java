@@ -36,10 +36,14 @@ public class HeartBeatService {
     private AdminMonitorConfig adminMonitorConfig;
     @Resource
     private AdminHeartBeatHandler adminHeartBeatHandler;
+    @Resource
+    private StringEncoder stringEncoder;
+    @Resource
+    private StringDecoder stringDecoder;
 
     public void heartListen() {
-        EventLoopGroup boss = new NioEventLoopGroup();
-        EventLoopGroup worker = new NioEventLoopGroup();
+        EventLoopGroup boss = new NioEventLoopGroup(1);
+        EventLoopGroup worker = new NioEventLoopGroup(1);
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(boss, worker)
@@ -48,8 +52,8 @@ public class HeartBeatService {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast("decoder", new StringDecoder());
-                            pipeline.addLast("encoder", new StringEncoder());
+                            pipeline.addLast("decoder", stringDecoder);
+                            pipeline.addLast("encoder", stringEncoder);
                             pipeline.addLast(new IdleStateHandler(adminMonitorConfig.getHeart().getReaderIdleTime(),
                                     adminMonitorConfig.getHeart().getWriterIdleTime(),
                                     adminMonitorConfig.getHeart().getAllIdleTime(), TimeUnit.SECONDS));

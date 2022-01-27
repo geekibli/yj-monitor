@@ -10,8 +10,8 @@ public class BasePageReq {
     private Integer pageNum;
     private Integer pageSize;
 
-    private static Integer DEFAULT_PAGE_NUM = 1;
-    private static Integer DEFAULT_PAGE_SIZE = 10;
+    private static final Integer DEFAULT_PAGE_NUM = 1;
+    private static final Integer DEFAULT_PAGE_SIZE = 10;
 
     public void pageDefault() {
         pageNum = DEFAULT_PAGE_NUM;

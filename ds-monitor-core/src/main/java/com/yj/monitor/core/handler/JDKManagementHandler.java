@@ -86,7 +86,9 @@ public class JDKManagementHandler {
         JmxThread jt = new JmxThread();
         jt.setTotalStartedThreadCount(thread.getTotalStartedThreadCount());
         jt.setThreadCount(thread.getThreadCount());
-        jt.setDeadLockedThreads(JSON.toJSONString(thread.findDeadlockedThreads()));
+        if (thread.findDeadlockedThreads() != null && thread.findDeadlockedThreads().length > 0) {
+            jt.setDeadLockedThreads(JSON.toJSONString(thread.findDeadlockedThreads()));
+        }
         jt.setCurrentThreadCpuTime(thread.getCurrentThreadCpuTime());
         jt.setCurrentThreadUserTime(thread.getCurrentThreadUserTime());
         jt.setDaemonThreadCount(thread.getDaemonThreadCount());
