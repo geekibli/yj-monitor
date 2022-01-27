@@ -9,9 +9,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorMemoryPartition;
 import com.yj.monitor.api.constant.MonitorMethods;
-import com.yj.monitor.api.domain.Node;
 import com.yj.monitor.api.domain.MemoryPartition;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
+import com.yj.monitor.api.rpc.MonitorApi;
+import com.yj.monitor.rpc.client.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -38,7 +39,25 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
 
     @Override
     public List<MonitorMemoryPartition> call() throws Exception {
+        return v2();
+    }
 
+
+    private List<MonitorMemoryPartition> v2() {
+        if (null == monitorEvent || monitorEvent.notValid()) {
+            return null;
+        }
+
+        MonitorApi api = new RpcClient(monitorEvent.getNode().getRpcAddress()).create(MonitorApi.class);
+        List<MemoryPartition> partitions = api.getMemoryPartitions();
+
+        return partitions.stream()
+                .map(this::convert)
+                .collect(Collectors.toList());
+    }
+
+
+    private List<MonitorMemoryPartition> v1() {
         if (null == monitorEvent || monitorEvent.notValid()) {
             return null;
         }
@@ -53,26 +72,18 @@ public class PullMemoryPartitionTask implements Callable<List<MonitorMemoryParti
         List<MemoryPartition> partitions = new ArrayList<>(JSON.parseArray(data, MemoryPartition.class));
 
         return partitions.stream()
-                .map(partition -> {
-                    MonitorMemoryPartition memoryPartition = new MonitorMemoryPartition();
-                    memoryPartition.setBatchId(monitorEvent.getBatchId());
-                    memoryPartition.setClientAddress(monitorEvent.getNode().getAddress());
-                    memoryPartition.setClientId(monitorEvent.getNode().getClientId());
-                    memoryPartition.setPartitionName(partition.getName());
-                    BeanUtils.copyProperties(partition, memoryPartition);
-                    return memoryPartition;
-                }).collect(Collectors.toList());
+                .map(this::convert)
+                .collect(Collectors.toList());
+
     }
 
-
-    public static void main(String[] args) throws Exception {
-        MonitorEvent event = new MonitorEvent();
-        Node node = new Node();
-        event.setBatchId(111L);
-        node.setActuatorMetricsUrl("http://127.0.0.1:10000/actuator-metrics");
-        node.setMonitorUrl("http://127.0.0.1:10000/monitor");
-        event.setNode(node);
-        List<MonitorMemoryPartition> call = new PullMemoryPartitionTask(event).call();
-        System.err.println("call " + JSON.toJSONString(call));
+    private MonitorMemoryPartition convert(MemoryPartition partition) {
+        MonitorMemoryPartition memoryPartition = new MonitorMemoryPartition();
+        memoryPartition.setBatchId(monitorEvent.getBatchId());
+        memoryPartition.setClientAddress(monitorEvent.getNode().getClientUrl());
+        memoryPartition.setClientId(monitorEvent.getNode().getClientId());
+        memoryPartition.setPartitionName(partition.getName());
+        BeanUtils.copyProperties(partition, memoryPartition);
+        return memoryPartition;
     }
 }

@@ -19,6 +19,7 @@ public class MonitorConfig {
     private String authToken;
     private String clientId;
     private Integer heartPort;
+    private Integer heartInterval;
 
     public MonitorConfig() {
     }
@@ -117,5 +118,13 @@ public class MonitorConfig {
 
     public void setHeartPort(Integer heartPort) {
         this.heartPort = heartPort;
+    }
+
+    public Integer getHeartInterval() {
+        return heartInterval;
+    }
+
+    public void setHeartInterval(Integer heartInterval) {
+        this.heartInterval = heartInterval;
     }
 }

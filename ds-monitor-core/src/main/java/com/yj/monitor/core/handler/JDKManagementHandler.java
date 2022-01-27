@@ -2,13 +2,16 @@ package com.yj.monitor.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.yj.monitor.api.domain.MemoryPartition;
+import com.yj.monitor.api.domain.*;
+import com.yj.monitor.api.domain.Runtime;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
 
 import java.lang.management.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -17,27 +20,26 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class MonitorHandler {
+public class JDKManagementHandler {
 
-    public Map<String, String> getRuntimeInfo() {
+    public Runtime getRuntimeInfo() {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("ClassPath", runtime.getClassPath());
-        map.put("BootClassPath", runtime.getBootClassPath());
-        map.put("LibraryPath", runtime.getLibraryPath());
-        map.put("ManagementSpecVersion", runtime.getManagementSpecVersion());
-        map.put("Name", runtime.getName());
-        map.put("SpecName", runtime.getSpecName());
-        map.put("SpecVendor", runtime.getSpecVendor());
-        map.put("SpecVersion", runtime.getSpecVersion());
-        map.put("VmName", runtime.getVmName());
-        map.put("VmVendor", runtime.getVmVendor());
-        map.put("VmVersion", runtime.getVmVersion());
-        map.put("InputArguments", JSON.toJSONString(runtime.getInputArguments()));
-        map.put("StartTime", runtime.getStartTime() + "");
-//        map.put("SystemProperties", JSON.toJSONString(runtime.getSystemProperties()));
-        map.put("Uptime", runtime.getUptime() + "");
-        return map;
+        Runtime rt = new Runtime();
+        rt.setClassPath(runtime.getClassPath());
+        rt.setBootClassPath(runtime.getBootClassPath());
+        rt.setLibraryPath(runtime.getLibraryPath());
+        rt.setManagementSpecVersion(runtime.getManagementSpecVersion());
+        rt.setName(runtime.getName());
+        rt.setSpecName(runtime.getSpecName());
+        rt.setSpecVendor(runtime.getSpecVendor());
+        rt.setSpecVersion(runtime.getSpecVersion());
+        rt.setVmName(runtime.getVmName());
+        rt.setVmVendor(runtime.getVmVendor());
+        rt.setVmVersion(runtime.getVmVersion());
+        rt.setInputArguments(JSON.toJSONString(runtime.getInputArguments()));
+        rt.setStartTime(runtime.getStartTime());
+        rt.setUpTime(runtime.getUptime());
+        return rt;
     }
 
     public Map<String, String> getSystemProperties() {
@@ -57,63 +59,77 @@ public class MonitorHandler {
         return map;
     }
 
-    public Map<String, String> getMemoryInfo() {
+    public Mem getMemoryInfo() {
         MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
-        HashMap<String, String> map = new HashMap<String, String>();
         MemoryUsage heap = mxb.getHeapMemoryUsage();
-        map.put("heap.max", heap.getMax() + "");
-        map.put("heap.committed", heap.getCommitted() + "");
-        map.put("heap.used", heap.getUsed() + "");
-        map.put("heap.init", heap.getInit() + "");
-
+        Mem mem = new Mem();
+        mem.setHeapCommitted(heap.getCommitted());
+        mem.setHeapInit(heap.getInit());
+        mem.setHeapMax(heap.getMax());
+        mem.setHeapUsed(heap.getUsed());
         MemoryUsage nonHeap = mxb.getNonHeapMemoryUsage();
-        map.put("nonHeap.init", nonHeap.getInit() + "");
-        map.put("nonHeap.used", nonHeap.getUsed() + "");
-        map.put("nonHeap.committed", nonHeap.getCommitted() + "");
-        map.put("nonHeap.max", nonHeap.getMax() + "");
-        return map;
+        mem.setNonHeapCommitted(nonHeap.getCommitted());
+        mem.setNonHeapInit(nonHeap.getInit());
+        mem.setNonHeapMax(nonHeap.getMax());
+        mem.setNonHeapUsed(nonHeap.getUsed());
+
+//        com.sun.management.OperatingSystemMXBean osmxb = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+//        map.put("freePhysicalMemorySize", osmxb.getFreePhysicalMemorySize());
+//        map.put("totalPhysicalMemorySize", osmxb.getTotalPhysicalMemorySize());
+//        map.put("freeSwapSpaceSize", osmxb.getFreeSwapSpaceSize());
+//        map.put("totalSwapSpaceSize", osmxb.getTotalSwapSpaceSize());
+        return mem;
     }
 
-    public Map<String, String> getThreadInfo() {
+    public JmxThread getThreadInfo() {
         ThreadMXBean thread = ManagementFactory.getThreadMXBean();
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("TotalStartedThreadCount", thread.getTotalStartedThreadCount() + "");
-        map.put("ThreadCount", thread.getThreadCount() + "");
-        map.put("DeadlockedThreads", JSON.toJSONString(thread.findDeadlockedThreads()));
-        map.put("CurrentThreadCpuTime", thread.getCurrentThreadCpuTime() + "");
-        map.put("CurrentThreadUserTime", thread.getCurrentThreadUserTime() + "");
-        map.put("DaemonThreadCount", thread.getDaemonThreadCount() + "");
-        map.put("PeakThreadCount", thread.getPeakThreadCount() + "");
-        map.put("isCurrentThreadCpuTimeSupported", thread.isCurrentThreadCpuTimeSupported() + "");
-        map.put("isObjectMonitorUsageSupported", thread.isObjectMonitorUsageSupported() + "");
-        map.put("isSynchronizerUsageSupported", thread.isSynchronizerUsageSupported() + "");
-        map.put("isThreadContentionMonitoringEnabled", thread.isThreadContentionMonitoringEnabled() + "");
-        map.put("isThreadContentionMonitoringSupported", thread.isThreadContentionMonitoringSupported() + "");
-        map.put("isThreadCpuTimeEnabled", thread.isThreadCpuTimeEnabled() + "");
-        map.put("isThreadCpuTimeSupported", thread.isThreadCpuTimeSupported() + "");
-        return map;
-    }
-
-    public Map<String, String> getClassLoader() {
-        ClassLoadingMXBean classLoading = ManagementFactory.getClassLoadingMXBean();
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("LoadedClassCount", classLoading.getLoadedClassCount() + "");
-        map.put("TotalLoadedClassCount", classLoading.getTotalLoadedClassCount() + "");
-        map.put("UnloadedClassCount", classLoading.getUnloadedClassCount() + "");
-        map.put("Verbose", classLoading.isVerbose() + "");
-        return map;
-    }
-
-    public Map<String, Map<String, Long>> getGcInfo() {
-        List<GarbageCollectorMXBean> gcList = ManagementFactory.getGarbageCollectorMXBeans();
-        HashMap<String, Map<String, Long>> gcMap = new HashMap<String, Map<String, Long>>();
-        for (GarbageCollectorMXBean gc : gcList) {
-            HashMap<String, Long> map = new HashMap<String, Long>();
-            map.put("CollectionCount", gc.getCollectionCount());
-            map.put("CollectionTime", gc.getCollectionTime());
-            gcMap.put(gc.getName(), map);
+        JmxThread jt = new JmxThread();
+        jt.setTotalStartedThreadCount(thread.getTotalStartedThreadCount());
+        jt.setThreadCount(thread.getThreadCount());
+        if (thread.findDeadlockedThreads() != null && thread.findDeadlockedThreads().length > 0) {
+            jt.setDeadLockedThreads(JSON.toJSONString(thread.findDeadlockedThreads()));
         }
-        return gcMap;
+        jt.setCurrentThreadCpuTime(thread.getCurrentThreadCpuTime());
+        jt.setCurrentThreadUserTime(thread.getCurrentThreadUserTime());
+        jt.setDaemonThreadCount(thread.getDaemonThreadCount());
+        jt.setPeakThreadCount(thread.getPeakThreadCount());
+        jt.setCurrentThreadCpuTimeSupported(thread.isCurrentThreadCpuTimeSupported());
+        jt.setObjectMonitorUsageSupported(thread.isObjectMonitorUsageSupported());
+        jt.setSynchronizerUsageSupported(thread.isSynchronizerUsageSupported());
+        jt.setThreadContentionMonitoringEnabled(thread.isThreadContentionMonitoringEnabled());
+        jt.setThreadContentionMonitoringSupported(thread.isThreadContentionMonitoringSupported());
+        jt.setThreadCpuTimeEnabled(thread.isThreadCpuTimeEnabled());
+        jt.setThreadCpuTimeSupported(thread.isThreadCpuTimeSupported());
+        return jt;
+    }
+
+    public ClassLoad getClassLoader() {
+        ClassLoadingMXBean classLoading = ManagementFactory.getClassLoadingMXBean();
+        ClassLoad cl = new ClassLoad();
+        cl.setLoaderClassCount(classLoading.getUnloadedClassCount());
+        cl.setTotalLoaderClassCount(classLoading.getTotalLoadedClassCount());
+        cl.setUnloadedClassCount(classLoading.getUnloadedClassCount());
+        cl.setVerbose(classLoading.isVerbose());
+        return cl;
+    }
+
+
+    public GarbageCollection getGcInfo() {
+        List<GarbageCollectorMXBean> gcList = ManagementFactory.getGarbageCollectorMXBeans();
+        Map<String, GarbageCollectorMXBean> mxBeanMap = gcList.stream().collect(Collectors.toMap(GarbageCollectorMXBean::getName, Function.identity()));
+        GarbageCollectorMXBean ms = mxBeanMap.get("PS MarkSweep");
+        GarbageCollection gc = new GarbageCollection();
+        if (ms != null) {
+            gc.setPsMarksweepCollectionCount(ms.getCollectionCount());
+            gc.setPsMarksweepCollectionTime(ms.getCollectionTime());
+        }
+
+        GarbageCollectorMXBean sc = mxBeanMap.get("PS Scavenge");
+        if (sc != null) {
+            gc.setPsScavengeCollectionCount(sc.getCollectionCount());
+            gc.setPsScavengeCollectionTime(sc.getCollectionTime());
+        }
+        return gc;
     }
 
 
@@ -127,7 +143,7 @@ public class MonitorHandler {
     }
 
 
-    private String formatSize(long size) {
+    private static String formatSize(long size) {
         String hrSize;
         double b = size;
         double k = size / 1024.0;
@@ -209,4 +225,5 @@ public class MonitorHandler {
         }
         return joiner.toString();
     }
+
 }

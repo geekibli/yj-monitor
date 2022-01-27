@@ -25,3 +25,7 @@ yj:
     is-throw-able: true
     monitor-open: true
     heart-port: 9001
+    heart-interval: 10
+
+
+rpc-port: 9050

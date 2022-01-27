@@ -1,6 +1,7 @@
 package com.yj.monitor.core.handler;
 
 import com.yj.monitor.api.constant.RemoteAPI;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @Date 2022/1/20 下午2:45
  * @Version 1.0
  */
+@ChannelHandler.Sharable
 @Component
 public class ClientHeartBeatHandler extends SimpleChannelInboundHandler<String> {
 

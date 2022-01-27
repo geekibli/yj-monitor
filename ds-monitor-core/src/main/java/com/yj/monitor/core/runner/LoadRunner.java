@@ -27,11 +27,12 @@ public class LoadRunner implements CommandLineRunner {
     private MonitorConfig monitorConfig;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (!monitorConfig.getMonitorOpen()) {
             logger.warn( "【 " + monitorConfig.getApplicationName() + " 】start with monitor is closed!" );
             return;
         }
         clientRegisterService.register2Admin(0);
     }
+
 }

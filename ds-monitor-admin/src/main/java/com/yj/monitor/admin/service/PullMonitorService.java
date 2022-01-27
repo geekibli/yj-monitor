@@ -1,6 +1,7 @@
 package com.yj.monitor.admin.service;
 
 import com.alibaba.fastjson.JSON;
+import com.yj.monitor.admin.config.AdminMonitorConfig;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.disruptor.MonitorEventProducer;
 import com.yj.monitor.admin.runner.*;
@@ -31,6 +32,8 @@ public class PullMonitorService {
     private ClassLoadService classLoadService;
     @Resource
     private GcService gcService;
+    @Resource
+    private AdminMonitorConfig adminMonitorConfig;
 
     /**
      * 定时执行
@@ -42,7 +45,9 @@ public class PullMonitorService {
         logger.info("【 Monitor admin 】start schedule job. ");
         // 确保初次演示时间要在第一次心跳检测之后触发, 保证address已经确保初始化了
         // initialDelay > heart interval
-        MonitorScheduleExecutor.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer), 60, 30, TimeUnit.SECONDS);
+        MonitorScheduleExecutor.build().scheduleWithFixedDelay(new PullMonitorTask(monitorEventProducer),
+                adminMonitorConfig.getPullTask().getInitialDelay(),
+                adminMonitorConfig.getPullTask().getDelay(), TimeUnit.SECONDS);
     }
 
 

@@ -8,8 +8,11 @@ import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorClassLoad;
 import com.yj.monitor.api.constant.MonitorMethods;
+import com.yj.monitor.api.domain.ClassLoad;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
+import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.api.rsp.Response;
+import com.yj.monitor.rpc.client.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +36,30 @@ public class PullClassLoadTask implements Callable<MonitorClassLoad> {
 
     @Override
     public MonitorClassLoad call() throws Exception {
+        return v2();
+    }
 
-        if (null == monitorEvent || monitorEvent.notValid()) {
+    private MonitorClassLoad v2() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
+            return null;
+        }
+
+        MonitorApi monitorApi = new RpcClient(monitorEvent.getNode().getRpcAddress()).create(MonitorApi.class);
+        ClassLoad classLoad = monitorApi.getClassLoad();
+        MonitorClassLoad mcl = new MonitorClassLoad();
+
+        mcl.setBatchId(monitorEvent.getBatchId());
+        mcl.setClientAddress(monitorEvent.getNode().getClientUrl());
+        mcl.setClientId(monitorEvent.getNode().getClientId());
+        mcl.setLoadedClassCount(classLoad.getLoaderClassCount());
+        mcl.setTotalLoadedClassCount(classLoad.getTotalLoaderClassCount());
+        mcl.setUnloadedClassCount(classLoad.getUnloadedClassCount());
+        mcl.setVerbose(classLoad.getVerbose() + "");
+        return mcl;
+    }
+
+    private MonitorClassLoad v1() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
             return null;
         }
 
@@ -44,7 +69,7 @@ public class PullClassLoadTask implements Callable<MonitorClassLoad> {
                 .execute();
 
         Response invokeRspVO = JSON.parseObject(response.body(), Response.class);
-        Map<String,String> map = (Map<String,String>) invokeRspVO.getData();
+        Map<String, String> map = (Map<String, String>) invokeRspVO.getData();
         MonitorClassLoad classLoad = new MonitorClassLoad();
         classLoad.setBatchId(monitorEvent.getBatchId());
         classLoad.setClientAddress(monitorEvent.getNode().getAddress());

@@ -14,15 +14,20 @@ public class AdminMonitorConfig {
     private ThreadPoolConfig threadPool;
     private HeartConfig heart;
 
-    private ScheduleConfig memory;
-    private ScheduleConfig runtime;
-    private ScheduleConfig gc;
-    private ScheduleConfig thread;
-
+    private ScheduleConfig pullTask;
 
     public static class ScheduleConfig{
+        private Boolean open;
         private Long delay;
         private Long initialDelay;
+
+        public Boolean getOpen() {
+            return open;
+        }
+
+        public void setOpen(Boolean open) {
+            this.open = open;
+        }
 
         public Long getDelay() {
             return delay;
@@ -74,43 +79,19 @@ public class AdminMonitorConfig {
         this.threadPool = threadPool;
     }
 
-    public ScheduleConfig getMemory() {
-        return memory;
-    }
-
-    public void setMemory(ScheduleConfig memory) {
-        this.memory = memory;
-    }
-
-    public ScheduleConfig getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(ScheduleConfig runtime) {
-        this.runtime = runtime;
-    }
-
-    public ScheduleConfig getGc() {
-        return gc;
-    }
-
-    public void setGc(ScheduleConfig gc) {
-        this.gc = gc;
-    }
-
-    public ScheduleConfig getThread() {
-        return thread;
-    }
-
-    public void setThread(ScheduleConfig thread) {
-        this.thread = thread;
-    }
-
     public HeartConfig getHeart() {
         return heart;
     }
 
     public void setHeart(HeartConfig heart) {
         this.heart = heart;
+    }
+
+    public ScheduleConfig getPullTask() {
+        return pullTask;
+    }
+
+    public void setPullTask(ScheduleConfig pullTask) {
+        this.pullTask = pullTask;
     }
 }

@@ -2,6 +2,7 @@ package com.yj.monitor.admin.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yj.monitor.admin.config.AdminMonitorConfig;
 import com.yj.monitor.admin.domain.RegisterCenter;
 
 import com.yj.monitor.admin.domain.req.ApplicationPageListReqVO;
@@ -33,6 +34,8 @@ public class RegisterService {
 
     private final Logger logger = LoggerFactory.getLogger(RegisterService.class);
     @Resource
+    private AdminMonitorConfig adminMonitorConfig;
+    @Resource
     private PullMonitorService pullMonitorService;
     @Resource
     private RegisterTransaction registerTransaction;
@@ -57,9 +60,9 @@ public class RegisterService {
         table.setSystemType(node.getSystemType());
         registerTransaction.registerClient(node.getClientId(), table);
 
-//        if (1 == RegisterCenter.onlineCount()) {
-//            pullMonitorService.execute();
-//        }
+        if (adminMonitorConfig.getPullTask().getOpen() && RegisterCenter.onlineCount() == 1) {
+            pullMonitorService.execute();
+        }
     }
 
 

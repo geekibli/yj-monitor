@@ -14,13 +14,21 @@
     <result column="non_heap_init" jdbcType="BIGINT" property="nonHeapInit" />
     <result column="non_heap_max" jdbcType="BIGINT" property="nonHeapMax" />
     <result column="non_heap_used" jdbcType="BIGINT" property="nonHeapUsed" />
+    <result column="total" jdbcType="BIGINT" property="total" />
+    <result column="available" jdbcType="BIGINT" property="available" />
+    <result column="page_size" jdbcType="BIGINT" property="pageSize" />
+    <result column="swap_pages_in" jdbcType="BIGINT" property="swapPagesIn" />
+    <result column="swap_pages_out" jdbcType="BIGINT" property="swapPagesOut" />
+    <result column="swap_total" jdbcType="BIGINT" property="swapTotal" />
+    <result column="swap_used" jdbcType="BIGINT" property="swapUsed" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
   </resultMap>
   <sql id="Base_Column_List">
     id, batch_id, client_address, client_id, heap_committed, heap_used, heap_init, heap_max, 
-    non_heap_committed, non_heap_init, non_heap_max, non_heap_used, create_time, update_time, 
+    non_heap_committed, non_heap_init, non_heap_max, non_heap_used, total, available, 
+    page_size, swap_pages_in, swap_pages_out, swap_total, swap_used, create_time, update_time, 
     is_deleted
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -40,13 +48,19 @@
     insert into monitor_memory (batch_id, client_address, client_id, 
       heap_committed, heap_used, heap_init, 
       heap_max, non_heap_committed, non_heap_init, 
-      non_heap_max, non_heap_used, create_time, 
-      update_time, is_deleted)
+      non_heap_max, non_heap_used, total, 
+      available, page_size, swap_pages_in, 
+      swap_pages_out, swap_total, swap_used, 
+      create_time, update_time, is_deleted
+      )
     values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
       #{heapCommitted,jdbcType=BIGINT}, #{heapUsed,jdbcType=BIGINT}, #{heapInit,jdbcType=BIGINT}, 
       #{heapMax,jdbcType=BIGINT}, #{nonHeapCommitted,jdbcType=BIGINT}, #{nonHeapInit,jdbcType=BIGINT}, 
-      #{nonHeapMax,jdbcType=BIGINT}, #{nonHeapUsed,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
+      #{nonHeapMax,jdbcType=BIGINT}, #{nonHeapUsed,jdbcType=BIGINT}, #{total,jdbcType=BIGINT}, 
+      #{available,jdbcType=BIGINT}, #{pageSize,jdbcType=BIGINT}, #{swapPagesIn,jdbcType=BIGINT}, 
+      #{swapPagesOut,jdbcType=BIGINT}, #{swapTotal,jdbcType=BIGINT}, #{swapUsed,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorMemory">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -86,6 +100,27 @@
       </if>
       <if test="nonHeapUsed != null">
         non_heap_used,
+      </if>
+      <if test="total != null">
+        total,
+      </if>
+      <if test="available != null">
+        available,
+      </if>
+      <if test="pageSize != null">
+        page_size,
+      </if>
+      <if test="swapPagesIn != null">
+        swap_pages_in,
+      </if>
+      <if test="swapPagesOut != null">
+        swap_pages_out,
+      </if>
+      <if test="swapTotal != null">
+        swap_total,
+      </if>
+      <if test="swapUsed != null">
+        swap_used,
       </if>
       <if test="createTime != null">
         create_time,
@@ -130,6 +165,27 @@
       </if>
       <if test="nonHeapUsed != null">
         #{nonHeapUsed,jdbcType=BIGINT},
+      </if>
+      <if test="total != null">
+        #{total,jdbcType=BIGINT},
+      </if>
+      <if test="available != null">
+        #{available,jdbcType=BIGINT},
+      </if>
+      <if test="pageSize != null">
+        #{pageSize,jdbcType=BIGINT},
+      </if>
+      <if test="swapPagesIn != null">
+        #{swapPagesIn,jdbcType=BIGINT},
+      </if>
+      <if test="swapPagesOut != null">
+        #{swapPagesOut,jdbcType=BIGINT},
+      </if>
+      <if test="swapTotal != null">
+        #{swapTotal,jdbcType=BIGINT},
+      </if>
+      <if test="swapUsed != null">
+        #{swapUsed,jdbcType=BIGINT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -178,6 +234,27 @@
       <if test="nonHeapUsed != null">
         non_heap_used = #{nonHeapUsed,jdbcType=BIGINT},
       </if>
+      <if test="total != null">
+        total = #{total,jdbcType=BIGINT},
+      </if>
+      <if test="available != null">
+        available = #{available,jdbcType=BIGINT},
+      </if>
+      <if test="pageSize != null">
+        page_size = #{pageSize,jdbcType=BIGINT},
+      </if>
+      <if test="swapPagesIn != null">
+        swap_pages_in = #{swapPagesIn,jdbcType=BIGINT},
+      </if>
+      <if test="swapPagesOut != null">
+        swap_pages_out = #{swapPagesOut,jdbcType=BIGINT},
+      </if>
+      <if test="swapTotal != null">
+        swap_total = #{swapTotal,jdbcType=BIGINT},
+      </if>
+      <if test="swapUsed != null">
+        swap_used = #{swapUsed,jdbcType=BIGINT},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -203,6 +280,13 @@
       non_heap_init = #{nonHeapInit,jdbcType=BIGINT},
       non_heap_max = #{nonHeapMax,jdbcType=BIGINT},
       non_heap_used = #{nonHeapUsed,jdbcType=BIGINT},
+      total = #{total,jdbcType=BIGINT},
+      available = #{available,jdbcType=BIGINT},
+      page_size = #{pageSize,jdbcType=BIGINT},
+      swap_pages_in = #{swapPagesIn,jdbcType=BIGINT},
+      swap_pages_out = #{swapPagesOut,jdbcType=BIGINT},
+      swap_total = #{swapTotal,jdbcType=BIGINT},
+      swap_used = #{swapUsed,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       is_deleted = #{isDeleted,jdbcType=TINYINT}

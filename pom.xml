@@ -21,6 +21,7 @@
         <module>ds-monitor-api</module>
         <module>ds-monitor-example</module>
         <module>ds-monitor-demo</module>
+        <module>ds-monitor-rpc</module>
     </modules>
 
 

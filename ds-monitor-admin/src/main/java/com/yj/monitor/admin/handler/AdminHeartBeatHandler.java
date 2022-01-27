@@ -3,6 +3,7 @@ package com.yj.monitor.admin.handler;
 import com.yj.monitor.admin.domain.RegisterCenter;
 import com.yj.monitor.admin.service.RegisterService;
 import com.yj.monitor.api.constant.RemoteAPI;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+import java.util.concurrent.atomic.LongAdder;
+
 import static io.netty.handler.timeout.IdleState.*;
 
 /**
@@ -19,12 +22,14 @@ import static io.netty.handler.timeout.IdleState.*;
  * @Date 2022/1/20 下午2:45
  * @Version 1.0
  */
+@ChannelHandler.Sharable
 @Component
 public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
 
     private final Logger logger = LoggerFactory.getLogger(AdminHeartBeatHandler.class);
 
-    int readIdleTimes = 0;
+    LongAdder readIdleTimes = new LongAdder();
+
 
     @Resource
     private RegisterService registerService;
@@ -51,7 +56,7 @@ public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
         switch (event.state()) {
             case READER_IDLE:
                 eventType = READER_IDLE.name();
-                readIdleTimes++;
+                readIdleTimes.increment();
                 break;
             case WRITER_IDLE:
                 eventType = WRITER_IDLE.name();
@@ -63,7 +68,7 @@ public class AdminHeartBeatHandler extends SimpleChannelInboundHandler<String> {
         }
 
         logger.info(ctx.channel().remoteAddress() + " timeout event : " + eventType);
-        if (readIdleTimes > 10) {
+        if (readIdleTimes.sum() > 10) {
             logger.warn(" Heartbeat timeout limit exceeded ");
             RegisterCenter.removeByAddress(ctx.channel().remoteAddress().toString());
             ctx.channel().writeAndFlush("idle close");
