@@ -1,6 +1,8 @@
 package com.yj.monitor.admin.config;
 
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,8 @@ import javax.annotation.Resource;
 @Configuration
 @EnableConfigurationProperties(AdminProperties.class)
 public class AdminMonitorConfiguration {
+
+    private final Logger logger = LoggerFactory.getLogger(AdminMonitorConfiguration.class);
 
     @Resource
     private AdminProperties adminProperties;
@@ -38,7 +42,7 @@ public class AdminMonitorConfiguration {
         config.setApplicationName(applicationName);
         config.setHeart(adminProperties.getHeart());
         config.setServerPort(serverPort);
-        System.err.println("admin config " + JSON.toJSONString(config));
+        logger.info("admin config " + JSON.toJSONString(config));
         return config;
     }
 

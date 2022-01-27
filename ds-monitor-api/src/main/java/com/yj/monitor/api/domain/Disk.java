@@ -1,11 +1,15 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/25 下午8:39
  * @Version 1.0
  */
-public class Disk {
+public class Disk implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long total;
     private Long free;

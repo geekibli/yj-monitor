@@ -1,5 +1,6 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,8 @@ import java.util.List;
  * @Date 2022/1/26 上午10:42
  * @Version 1.0
  */
-public class Processor {
+public class Processor implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long contextSwitches;
     private Boolean cpu64bit;

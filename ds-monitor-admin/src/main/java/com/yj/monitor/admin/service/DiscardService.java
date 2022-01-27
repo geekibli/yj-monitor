@@ -18,7 +18,7 @@ public class DiscardService {
 
     public String discardClient(String clientId){
         RegisterCenter.removeByClient(clientId);
-        logger.warn(clientId + "断开链接 ...");
+        logger.warn(clientId + " 断开链接 ...");
         return RemoteAPI.DISCARD_CLIENT_RSP;
     }
 }

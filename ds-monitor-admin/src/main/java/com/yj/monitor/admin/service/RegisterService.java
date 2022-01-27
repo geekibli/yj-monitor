@@ -57,9 +57,9 @@ public class RegisterService {
         table.setSystemType(node.getSystemType());
         registerTransaction.registerClient(node.getClientId(), table);
 
-//        if (1 == RegisterCenter.onlineCount()) {
-//            pullMonitorService.execute();
-//        }
+        if (1 == RegisterCenter.onlineCount()) {
+            pullMonitorService.execute();
+        }
     }
 
 

@@ -1,11 +1,16 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/19 下午5:58
  * @Version 1.0
  */
-public class Method {
+public class Method implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String cName;
     private String mName;
     private String mDesc;

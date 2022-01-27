@@ -1,11 +1,16 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/26 上午11:23
  * @Version 1.0
  */
-public class Process {
+public class Process implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String name = "";
     private String path = "";
     private String commandLine = "";

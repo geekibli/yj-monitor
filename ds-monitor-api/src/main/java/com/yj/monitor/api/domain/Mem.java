@@ -1,11 +1,16 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/26 上午9:09
- * @Version 1.0
+ * @Version 1.0c
  */
-public class Mem {
+public class Mem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long available;
     private Long pageSize;
     private Long swapPagesIn;

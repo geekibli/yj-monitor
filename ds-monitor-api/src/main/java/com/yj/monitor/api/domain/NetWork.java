@@ -1,5 +1,6 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,10 @@ import java.util.List;
  * @Date 2022/1/26 上午9:51
  * @Version 1.0
  */
-public class NetWork {
+public class NetWork implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long bytesRecv;
     private Integer bytesSent;
     private String displayName;

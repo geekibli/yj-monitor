@@ -1,11 +1,15 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/26 上午9:10
  * @Version 1.0
  */
-public class SysFile {
+public class SysFile implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 盘符路径

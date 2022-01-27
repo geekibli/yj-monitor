@@ -1,11 +1,15 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/24 下午2:22
  * @Version 1.0
  */
-public class MemoryPartition {
+public class MemoryPartition implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private String partitionType;

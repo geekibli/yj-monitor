@@ -8,8 +8,11 @@ import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorMemory;
 import com.yj.monitor.api.constant.MonitorMethods;
+import com.yj.monitor.api.domain.Mem;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
+import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.api.rsp.Response;
+import com.yj.monitor.rpc.client.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +28,6 @@ import java.util.concurrent.Callable;
 public class PullMemoryTask implements Callable<MonitorMemory> {
     private final Logger logger = LoggerFactory.getLogger(PullMemoryTask.class);
 
-
     private final MonitorEvent monitorEvent;
 
     public PullMemoryTask(MonitorEvent monitorEvent) {
@@ -34,6 +36,43 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
 
     @Override
     public MonitorMemory call() {
+        return v2();
+    }
+
+
+    private MonitorMemory v2() {
+        if (null == monitorEvent || monitorEvent.notValid()) {
+            return null;
+        }
+
+        MonitorApi monitorApi = new RpcClient(monitorEvent.getNode().getRpcAddress()).create(MonitorApi.class);
+        Mem memInfo = monitorApi.getMemInfo();
+
+        MonitorMemory memory = new MonitorMemory();
+        memory.setBatchId(monitorEvent.getBatchId());
+        memory.setClientAddress(monitorEvent.getNode().getAddress());
+        memory.setClientId(monitorEvent.getNode().getClientId());
+
+        memory.setHeapCommitted(memInfo.getHeapCommitted());
+        memory.setHeapMax(memInfo.getHeapMax());
+        memory.setHeapInit(memInfo.getHeapInit());
+        memory.setHeapUsed(memInfo.getHeapUsed());
+        memory.setNonHeapCommitted(memInfo.getNonHeapCommitted());
+        memory.setNonHeapInit(memInfo.getNonHeapInit());
+        memory.setNonHeapMax(memInfo.getNonHeapMax());
+        memory.setNonHeapUsed(memInfo.getNonHeapUsed());
+        memory.setAvailable(memInfo.getAvailable());
+        memory.setTotal(memInfo.getTotal());
+        memory.setSwapPagesIn(memInfo.getSwapPagesIn());
+        memory.setSwapPagesOut(memInfo.getSwapPagesOut());
+        memory.setSwapTotal(memInfo.getSwapTotal());
+        memory.setSwapUsed(memInfo.getSwapUsed());
+        memory.setPageSize(memInfo.getPageSize());
+        return memory;
+    }
+
+
+    private MonitorMemory v1() {
         if (null == monitorEvent || monitorEvent.notValid()) {
             return null;
         }
@@ -43,9 +82,8 @@ public class PullMemoryTask implements Callable<MonitorMemory> {
                 .body(JSON.toJSONString(new RemoteMonitorReqVO(MonitorMethods.MEMORY.getcName(), MonitorMethods.MEMORY.getmName(), new Object[0])))
                 .execute();
 
-
         Response invokeRspVO = JSON.parseObject(response.body(), Response.class);
-        Map<String,String> map = (Map<String,String>)invokeRspVO.getData();
+        Map<String, String> map = (Map<String, String>) invokeRspVO.getData();
 
         MonitorMemory memory = new MonitorMemory();
         memory.setBatchId(monitorEvent.getBatchId());

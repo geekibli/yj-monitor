@@ -1,11 +1,15 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/20 下午12:15
  * @Version 1.0
  */
-public class Node {
+public class Node implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 基本信息
@@ -20,6 +24,7 @@ public class Node {
     /**
      * 接口信息
      */
+    private String rpcAddress;
     private String monitorUrl;
     private String actuatorMetricsUrl;
 
@@ -107,5 +112,13 @@ public class Node {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
+    }
+
+    public String getRpcAddress() {
+        return rpcAddress;
+    }
+
+    public void setRpcAddress(String rpcAddress) {
+        this.rpcAddress = rpcAddress;
     }
 }

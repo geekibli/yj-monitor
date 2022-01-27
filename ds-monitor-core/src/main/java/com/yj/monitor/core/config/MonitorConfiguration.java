@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yj.monitor.api.domain.Token;
 import com.yj.monitor.api.util.IpUtil;
 import com.yj.monitor.api.util.Rc4Util;
+import com.yj.monitor.rpc.server.RpcServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 import oshi.SystemInfo;
 
@@ -24,6 +26,7 @@ import javax.annotation.Resource;
  */
 @Configuration
 @EnableConfigurationProperties(DsMonitorProperties.class)
+@Import(value = {RpcServer.class})
 public class MonitorConfiguration {
 
     private final Logger logger = LoggerFactory.getLogger(MonitorConfiguration.class);
@@ -80,7 +83,7 @@ public class MonitorConfiguration {
     }
 
     @Bean
-    public SystemInfo systemInfo(){
+    public SystemInfo systemInfo() {
         return new SystemInfo();
     }
 

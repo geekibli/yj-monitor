@@ -6,9 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorGc;
 import com.yj.monitor.api.constant.MonitorMethods;
+import com.yj.monitor.api.domain.GarbageCollection;
 import com.yj.monitor.api.domain.Method;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
+import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.api.rsp.Response;
+import com.yj.monitor.rpc.client.RpcClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +40,36 @@ public class PullGcTask implements Callable<MonitorGc> {
 
     @Override
     public MonitorGc call() {
-        if (null == monitorEvent || monitorEvent.notValid()) {
+        return v2();
+    }
+
+    private MonitorGc v2() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
+            return null;
+        }
+
+        MonitorApi monitorApi = new RpcClient(monitorEvent.getNode().getRpcAddress()).create(MonitorApi.class);
+        GarbageCollection gcInfo = monitorApi.getGcInfo();
+        MonitorGc mgc = new MonitorGc();
+        mgc.setBatchId(monitorEvent.getBatchId());
+        mgc.setClientAddress(monitorEvent.getNode().getAddress());
+        mgc.setClientId(monitorEvent.getNode().getClientId());
+        mgc.setPsMarksweepCollectionCount(gcInfo.getPsMarksweepCollectionCount().intValue());
+        mgc.setPsMarksweepCollectionTime(gcInfo.getPsMarksweepCollectionTime().intValue());
+        mgc.setPsScavengeCollectionCount(gcInfo.getPsScavengeCollectionCount().intValue());
+        mgc.setPsScavengeCollectionTime(gcInfo.getPsScavengeCollectionTime().intValue());
+        mgc.setLiveDataSize(gcInfo.getLiveDataSize());
+        mgc.setMaxDataSize(gcInfo.getMaxDataSize());
+        mgc.setMemoryAllocatedCount(gcInfo.getMemoryAllocatedCount());
+        mgc.setMemoryPromotedCount(gcInfo.getMemoryPromotedCount());
+        mgc.setPauseCount(gcInfo.getPauseCount());
+        mgc.setPauseMax(gcInfo.getPauseMax());
+        mgc.setPauseTotalTime(mgc.getPauseTotalTime());
+        return mgc;
+    }
+
+    private MonitorGc v1() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
             return null;
         }
 

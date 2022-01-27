@@ -39,5 +39,15 @@
       "name": "yj.monitor.admin.secret",
       "type": "java.lang.String",
       "description": "Description for yj.monitor.admin.secret."
+    },
+    {
+      "name": "yj.monitor.rpc.server.port",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.rpc.server.port."
+    },
+    {
+      "name": "yj.monitor.rpc-port",
+      "type": "java.lang.String",
+      "description": "Description for yj.monitor.rpc-port."
     }
   ] }

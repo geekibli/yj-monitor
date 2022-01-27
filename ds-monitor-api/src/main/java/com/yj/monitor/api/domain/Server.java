@@ -1,11 +1,15 @@
 package com.yj.monitor.api.domain;
 
+import java.io.Serializable;
+
 /**
  * @Author gaolei
  * @Date 2022/1/25 下午7:47
  * @Version 1.0
  */
-public class Server {
+public class Server implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * mac/linux

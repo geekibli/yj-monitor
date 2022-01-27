@@ -1,17 +1,22 @@
 package com.yj.monitor.core.handler;
 
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yj.monitor.api.constant.MetricName;
 import com.yj.monitor.api.domain.Disk;
 import com.yj.monitor.api.domain.Measurement;
+import com.yj.monitor.api.domain.Method;
 import com.yj.monitor.api.rsp.Response;
 import com.yj.monitor.core.config.MonitorConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author gaolei
@@ -29,36 +34,81 @@ public class SpringBootActuatorHandler {
         return Response.successData(metric(MetricName.JVM_GC_LIVE_DATA_SIZE, port));
     }
 
+    public Long getGcLiveDataSizeVal(Integer port) {
+        String val = getMeasurementFirstVal(MetricName.JVM_GC_LIVE_DATA_SIZE, port);
+        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+    }
+
     public Response getGcMaxDataSize(Integer port) {
         return Response.successData(metric(MetricName.JVM_GC_MAX_DATA_SIZE, port));
+    }
+
+    public Long getGcMaxDataSizeVal(Integer port) {
+        String val = getMeasurementFirstVal(MetricName.JVM_GC_MAX_DATA_SIZE, port);
+        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
     }
 
     public Response getGcMemoryAllocated(Integer port) {
         return Response.successData(metric(MetricName.JVM_GC_MEMORY_ALLOCATED, port));
     }
 
+    public Long getGcMemoryAllocatedVal(Integer port) {
+        String val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_ALLOCATED, port);
+        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
+    }
+
     public Response getGcMemoryPromoted(Integer port) {
         return Response.successData(metric(MetricName.JVM_GC_MEMORY_PROMOTED, port));
+    }
+
+    public Long getGcMemoryPromotedVal(Integer port) {
+        String val = getMeasurementFirstVal(MetricName.JVM_GC_MEMORY_PROMOTED, port);
+        return StringUtils.isBlank(val) ? 0L : Long.parseLong(val);
     }
 
     public Response getGcPause(Integer port) {
         return Response.successData(metric(MetricName.JVM_GC_PAUSE, port));
     }
 
+    public Map<String, String> getGcPauseMap(Integer port) {
+        String body = metric(MetricName.JVM_GC_PAUSE, port);
+        if (StringUtils.isEmpty(body)) {
+            return null;
+        }
+        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
+        if (measurements.isEmpty()) {
+            return null;
+        }
+        return measurements.stream()
+                .collect(Collectors.toMap(Measurement::getStatistic, Measurement::getValue, (o1, o2) -> o1));
+    }
+
+
     /**
      * 只允许本地调用
      *
      * @param name 指标名称
-     * @return
+     * @return json
      */
-    private String metric(String name, Integer port) {
+    public String metric(String name, Integer port) {
         return HttpUtil.get("http://localhost:" + port + "/actuator/metrics/" + name);
     }
 
 
-    public String getSystemCpuUsage(Integer port) {
-        String metric = metric(MetricName.SYSTEM_CPU_USAGE, port);
-        List<Measurement> measurements = JSON.parseObject(metric).getJSONArray("measurements").toJavaList(Measurement.class);
+    public String getSystemCpuUsageVal(Integer port) {
+        return getMeasurementFirstVal(MetricName.SYSTEM_CPU_USAGE, port);
+    }
+
+
+    private String getMeasurementFirstVal(String metricName, Integer port) {
+        String body = metric(metricName, port);
+        if (StringUtils.isEmpty(body)) {
+            return null;
+        }
+        List<Measurement> measurements = JSON.parseObject(body).getJSONArray("measurements").toJavaList(Measurement.class);
+        if (measurements.isEmpty()) {
+            return null;
+        }
         return measurements.get(0).getValue();
     }
 
@@ -77,7 +127,6 @@ public class SpringBootActuatorHandler {
         disk.setThreshold(details.getLong("threshold"));
         return disk;
     }
-
 
 
 }

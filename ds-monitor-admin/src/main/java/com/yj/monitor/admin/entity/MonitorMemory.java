@@ -68,6 +68,41 @@ public class MonitorMemory {
     private Long nonHeapUsed;
 
     /**
+     * 物理总内存
+     */
+    private Long total;
+
+    /**
+     * 可用物理内存
+     */
+    private Long available;
+
+    /**
+     * 
+     */
+    private Long pageSize;
+
+    /**
+     * 
+     */
+    private Long swapPagesIn;
+
+    /**
+     * 
+     */
+    private Long swapPagesOut;
+
+    /**
+     * 总交换区大小
+     */
+    private Long swapTotal;
+
+    /**
+     * 交换区可用大小
+     */
+    private Long swapUsed;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -179,6 +214,62 @@ public class MonitorMemory {
 
     public void setNonHeapUsed(Long nonHeapUsed) {
         this.nonHeapUsed = nonHeapUsed;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
+    }
+
+    public Long getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Long available) {
+        this.available = available;
+    }
+
+    public Long getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Long pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Long getSwapPagesIn() {
+        return swapPagesIn;
+    }
+
+    public void setSwapPagesIn(Long swapPagesIn) {
+        this.swapPagesIn = swapPagesIn;
+    }
+
+    public Long getSwapPagesOut() {
+        return swapPagesOut;
+    }
+
+    public void setSwapPagesOut(Long swapPagesOut) {
+        this.swapPagesOut = swapPagesOut;
+    }
+
+    public Long getSwapTotal() {
+        return swapTotal;
+    }
+
+    public void setSwapTotal(Long swapTotal) {
+        this.swapTotal = swapTotal;
+    }
+
+    public Long getSwapUsed() {
+        return swapUsed;
+    }
+
+    public void setSwapUsed(Long swapUsed) {
+        this.swapUsed = swapUsed;
     }
 
     public Date getCreateTime() {

@@ -8,8 +8,11 @@ import com.alibaba.fastjson.JSON;
 import com.yj.monitor.admin.disruptor.MonitorEvent;
 import com.yj.monitor.admin.entity.MonitorThread;
 import com.yj.monitor.api.constant.MonitorMethods;
+import com.yj.monitor.api.domain.JmxThread;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
+import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.api.rsp.Response;
+import com.yj.monitor.rpc.client.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +36,31 @@ public class PullThreadTask implements Callable<MonitorThread> {
 
     @Override
     public MonitorThread call() throws Exception {
-        if (null == monitorEvent || null == monitorEvent.getBatchId() || null == monitorEvent.getNode()) {
+        return v2();
+    }
+
+    private MonitorThread v2() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
+            return null;
+        }
+
+        MonitorApi monitorApi = new RpcClient(monitorEvent.getNode().getRpcAddress()).create(MonitorApi.class);
+        JmxThread thread = monitorApi.getThread();
+        MonitorThread mt = new MonitorThread();
+        mt.setBatchId(monitorEvent.getBatchId());
+        mt.setClientAddress(monitorEvent.getNode().getAddress());
+        mt.setClientId(monitorEvent.getNode().getClientId());
+
+        mt.setDaemonCount(Long.valueOf(thread.getDaemonThreadCount()));
+        mt.setThreadCount(Long.valueOf(thread.getThreadCount()));
+        mt.setTotalStartedCount(thread.getTotalStartedThreadCount());
+        mt.setPeakCount(Long.valueOf(thread.getPeakThreadCount()));
+        mt.setDeadlockThreads(thread.getDeadLockedThreads());
+        return mt;
+    }
+
+    private MonitorThread v1() {
+        if (monitorEvent == null || monitorEvent.notValid()) {
             return null;
         }
 

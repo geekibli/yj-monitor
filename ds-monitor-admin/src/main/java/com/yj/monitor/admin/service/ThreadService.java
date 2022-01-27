@@ -26,11 +26,11 @@ public class ThreadService {
     @Resource
     private MonitorThreadMapper monitorThreadMapper;
 
-    public void saveThread(MonitorEvent event){
+    public void saveThread(MonitorEvent event) {
         Future<MonitorThread> threadFuture = MonitorExecutor.build().submit(new PullThreadTask(event));
         MonitorThread thread = null;
         try {
-             thread = threadFuture.get();
+            thread = threadFuture.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -42,5 +42,4 @@ public class ThreadService {
         }
         monitorThreadMapper.insertSelective(thread);
     }
-
 }
