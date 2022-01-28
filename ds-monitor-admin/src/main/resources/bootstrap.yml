@@ -10,7 +10,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3331/yj_monitor?useUnicode=true&autoReconnect=true&tinyInt1isBit=false&allowMultiQueries=true&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: '@BeiJing922026'
+    password: '@GaoLei123654'
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 5

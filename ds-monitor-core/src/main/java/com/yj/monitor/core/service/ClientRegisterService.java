@@ -112,7 +112,7 @@ public class ClientRegisterService {
         node.setActuatorMetricsUrl(url + RemoteAPI.ACTUATOR_METRICS);
         node.setSystemType(OshiUtil.getOs().getFamily());
         // todo
-        node.setRpcAddress("http://" + monitorConfig.getLocalHost() + ":" + "9050");
+        node.setRpcAddress("http://" + monitorConfig.getLocalHost() + ":" + monitorConfig.getRpcPort());
         logger.info("client name {}", JSON.toJSONString(node));
         return node;
     }

@@ -76,7 +76,6 @@ public class RpcClient {
             msg.setAccessToken("gaoleif1e629");
             msg.setTraceId(UUID.randomUUID().toString());
             msg.setCreateMillisTime(System.currentTimeMillis());
-            msg.setServerAddress("http://127.0.0.1:9050/");
 
             final RpcProxyHandler consumerHandler = new RpcProxyHandler();
             EventLoopGroup group = new NioEventLoopGroup();

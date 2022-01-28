@@ -4,6 +4,7 @@
 
 - JDK自带的Manage后期封装成endpoint
 - loggers endpoint也允许你在运行时改变应用的日志等级。
+- **一台机器起多个不同的进程，总不能一个进程开多个心跳和rpc端口吧** TODO
 
 ### 监控部分
 - jvm

@@ -55,7 +55,7 @@ public class RegisterService {
 
         ClientRegisterTable table = new ClientRegisterTable();
         table.setApplicationName(node.getApplicationName());
-        table.setClientAddress(node.getAddress());
+        table.setClientAddress(node.getClientUrl());
         table.setClientId(node.getClientId());
         table.setSystemType(node.getSystemType());
         registerTransaction.registerClient(node.getClientId(), table);

@@ -37,7 +37,7 @@ public class ContextClosedRunner {
             param.put("clientId", monitorConfig.getClientId());
             String discardResult = HttpUtil.get(monitorConfig.getAdminUrl() + RemoteAPI.DISCARD_CLIENT, param);
             logger.warn("通知admin清理当前结点 ：{}", discardResult);
-        });
+        }, "Monitor-Node-Clean");
         thread.start();
         thread.join();
         logger.info(".....");

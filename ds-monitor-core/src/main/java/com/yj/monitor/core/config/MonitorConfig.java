@@ -20,6 +20,7 @@ public class MonitorConfig {
     private String clientId;
     private Integer heartPort;
     private Integer heartInterval;
+    private Integer rpcPort;
 
     public MonitorConfig() {
     }
@@ -126,5 +127,13 @@ public class MonitorConfig {
 
     public void setHeartInterval(Integer heartInterval) {
         this.heartInterval = heartInterval;
+    }
+
+    public Integer getRpcPort() {
+        return rpcPort;
+    }
+
+    public void setRpcPort(Integer rpcPort) {
+        this.rpcPort = rpcPort;
     }
 }
