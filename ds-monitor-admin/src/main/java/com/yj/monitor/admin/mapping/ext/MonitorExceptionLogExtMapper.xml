@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.ext.MonitorExceptionLogExtMapper">
+
+    <select id="pageList" parameterType="string"
+            resultMap="com.yj.monitor.admin.mapper.MonitorExceptionLogMapper.BaseResultMap">
+        select
+        <include refid="com.yj.monitor.admin.mapper.MonitorExceptionLogMapper.Base_Column_List"/>
+        from monitor_exception_log
+        where is_deleted = 0
+        <if test="className != null and className != ''">
+            AND class_name = #{className}
+        </if>
+        <if test="methodName != null and methodName != ''">
+            AND method_name = #{methodName}
+        </if>
+    </select>
+</mapper>
