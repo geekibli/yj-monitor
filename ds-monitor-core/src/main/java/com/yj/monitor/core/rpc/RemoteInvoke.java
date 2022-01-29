@@ -1,7 +1,7 @@
 package com.yj.monitor.core.rpc;
 
 import com.alibaba.fastjson.JSON;
-import com.yj.monitor.api.constant.RemoteInvokeStatus;
+import com.yj.monitor.api.domain.HttpRequestStatus;
 import com.yj.monitor.api.req.RemoteMonitorReqVO;
 import com.yj.monitor.api.rsp.Response;
 import org.slf4j.Logger;
@@ -44,19 +44,19 @@ public class RemoteInvoke {
             return Response.successData(invoke);
         } catch (ClassNotFoundException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
+            return Response.build(HttpRequestStatus.ILLEGAL_ARGUMENT.getCode(), "class not found");
         } catch (NoSuchMethodException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
+            return Response.build(HttpRequestStatus.NOT_FOUND.getCode(), "method not found");
         } catch (IllegalAccessException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
+            return Response.build(HttpRequestStatus.METHOD_NOT_ALLOW.getCode(), "Illegal access");
         } catch (InvocationTargetException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
+            return Response.build(HttpRequestStatus.INTERNAL_SERVER_ERROR.getCode(), "Invocation exception");
         } catch (InstantiationException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
+            return Response.build(HttpRequestStatus.INTERNAL_SERVER_ERROR.getCode(), "Reflect instance error!");
         }
     }
 
@@ -66,19 +66,19 @@ public class RemoteInvoke {
             return doReflect(reqVO);
         } catch (ClassNotFoundException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.ILLEGAL_ARGUMENT, "class not found");
+            return Response.build(HttpRequestStatus.NOT_FOUND.getCode(), "class not found");
         } catch (NoSuchMethodException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.NOT_FOUND, "method not found");
+            return Response.build(HttpRequestStatus.NOT_FOUND.getCode(), "method not found");
         } catch (IllegalAccessException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.NOT_ACCESS, "Illegal access");
+            return Response.build(HttpRequestStatus.METHOD_NOT_ALLOW.getCode(), "Illegal access");
         } catch (InvocationTargetException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Invocation exception");
+            return Response.build(HttpRequestStatus.INTERNAL_SERVER_ERROR.getCode(), "Invocation exception");
         } catch (InstantiationException e) {
             logger.error("Reflect invoke error!", e);
-            return Response.build(RemoteInvokeStatus.INTERNET_ERROR, "Reflect instance error!");
+            return Response.build(HttpRequestStatus.INTERNAL_SERVER_ERROR.getCode(), "Reflect instance error!");
         }
     }
 
@@ -112,7 +112,7 @@ public class RemoteInvoke {
         Class<?> aClass = Class.forName("com.yj.monitor.core.service.ActuatorMetricService");
         Object o = aClass.newInstance();
         Method method = aClass.getMethod("getGcLiveDataSize", Integer.class);
-        Object [] params = new Object[1];
+        Object[] params = new Object[1];
         params[0] = 10000;
         method.invoke(o, params);
     }

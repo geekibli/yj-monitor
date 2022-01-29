@@ -1,7 +1,7 @@
 package com.yj.monitor.api.rsp;
 
 
-import com.yj.monitor.api.constant.RemoteInvokeStatus;
+import com.yj.monitor.api.domain.HttpRequestStatus;
 
 
 /**
@@ -23,23 +23,19 @@ public class Response {
     }
 
     public static Response successData(Object data) {
-        return new Response(RemoteInvokeStatus.SUCCESS, data);
+        return new Response(HttpRequestStatus.SUCCESS.getCode(), data);
     }
 
-    public static Response failData(String reason) {
-        return new Response(RemoteInvokeStatus.INTERNET_ERROR, reason);
+    public static Response error(String reason) {
+        return new Response(HttpRequestStatus.INTERNAL_SERVER_ERROR.getCode(), reason);
     }
 
     public static Response build(int code, String data) {
         return new Response(code, data);
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
+    public static Response build(HttpRequestStatus status) {
+        return new Response(status.getCode(), status.getMsg());
     }
 
     public Object getData() {
@@ -48,5 +44,13 @@ public class Response {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

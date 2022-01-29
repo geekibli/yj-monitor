@@ -33,6 +33,32 @@ public class ServerRspVO {
 
     private String serverHost;
 
+
+    /**
+     * cpu使用率
+     */
+    private Double cpuTotalUsage;
+
+    /**
+     * cpu系统使用率
+     */
+    private Double cpuSysUsage;
+
+    /**
+     * cpu用户使用率
+     */
+    private Double cpuUserUsage;
+
+    /**
+     * cpu等待率
+     */
+    private Double cpuWait;
+
+    /**
+     * cpu可用
+     */
+    private Double cpuFree;
+
     public ServerRspVO() {
     }
 
@@ -146,5 +172,45 @@ public class ServerRspVO {
 
     public void setServerHost(String serverHost) {
         this.serverHost = serverHost;
+    }
+
+    public Double getCpuTotalUsage() {
+        return cpuTotalUsage;
+    }
+
+    public void setCpuTotalUsage(Double cpuTotalUsage) {
+        this.cpuTotalUsage = cpuTotalUsage;
+    }
+
+    public Double getCpuSysUsage() {
+        return cpuSysUsage;
+    }
+
+    public void setCpuSysUsage(Double cpuSysUsage) {
+        this.cpuSysUsage = cpuSysUsage;
+    }
+
+    public Double getCpuUserUsage() {
+        return cpuUserUsage;
+    }
+
+    public void setCpuUserUsage(Double cpuUserUsage) {
+        this.cpuUserUsage = cpuUserUsage;
+    }
+
+    public Double getCpuWait() {
+        return cpuWait;
+    }
+
+    public void setCpuWait(Double cpuWait) {
+        this.cpuWait = cpuWait;
+    }
+
+    public Double getCpuFree() {
+        return cpuFree;
+    }
+
+    public void setCpuFree(Double cpuFree) {
+        this.cpuFree = cpuFree;
     }
 }

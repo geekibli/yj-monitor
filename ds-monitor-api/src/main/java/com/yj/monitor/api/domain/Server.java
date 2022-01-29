@@ -20,7 +20,6 @@ public class Server implements Serializable {
      * x86_64
      */
     private String arch;
-    private String systemLoadAverage;
 
     private String userName;
     private String userCountry;
@@ -28,12 +27,60 @@ public class Server implements Serializable {
     private String jvmName;
     private String jvmInfo;
 
+    /**
+     * 系统负载
+     */
+    private Double systemLoadAverage;
 
+    /**
+     * 磁盘总量
+     */
     private Long diskTotal;
+
+    /**
+     * 可用磁盘
+     */
     private Long diskFree;
+
+    /**
+     * 磁盘阈值
+     */
     private Long diskThreshold;
 
-    private String systemCpuUsage;
+    /**
+     * cpu使用
+     */
+    private Double systemCpuUsage;
+
+    /**
+     * 服务器ip
+     */
+    private String serverHost;
+
+    /**
+     * cpu使用率
+     */
+    private Double cpuTotalUsage;
+
+    /**
+     * cpu系统使用率
+     */
+    private Double cpuSysUsage;
+
+    /**
+     * cpu用户使用率
+     */
+    private Double cpuUserUsage;
+
+    /**
+     * cpu等待率
+     */
+    private Double cpuWait;
+
+    /**
+     * cpu可用
+     */
+    private Double cpuFree;
 
 
     public String getServerType() {
@@ -58,14 +105,6 @@ public class Server implements Serializable {
 
     public void setArch(String arch) {
         this.arch = arch;
-    }
-
-    public String getSystemLoadAverage() {
-        return systemLoadAverage;
-    }
-
-    public void setSystemLoadAverage(String systemLoadAverage) {
-        this.systemLoadAverage = systemLoadAverage;
     }
 
     public String getUserName() {
@@ -132,11 +171,71 @@ public class Server implements Serializable {
         this.diskThreshold = diskThreshold;
     }
 
-    public String getSystemCpuUsage() {
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Double getSystemLoadAverage() {
+        return systemLoadAverage;
+    }
+
+    public void setSystemLoadAverage(Double systemLoadAverage) {
+        this.systemLoadAverage = systemLoadAverage;
+    }
+
+    public Double getSystemCpuUsage() {
         return systemCpuUsage;
     }
 
-    public void setSystemCpuUsage(String systemCpuUsage) {
+    public void setSystemCpuUsage(Double systemCpuUsage) {
         this.systemCpuUsage = systemCpuUsage;
+    }
+
+    public String getServerHost() {
+        return serverHost;
+    }
+
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
+    }
+
+    public Double getCpuTotalUsage() {
+        return cpuTotalUsage;
+    }
+
+    public void setCpuTotalUsage(Double cpuTotalUsage) {
+        this.cpuTotalUsage = cpuTotalUsage;
+    }
+
+    public Double getCpuSysUsage() {
+        return cpuSysUsage;
+    }
+
+    public void setCpuSysUsage(Double cpuSysUsage) {
+        this.cpuSysUsage = cpuSysUsage;
+    }
+
+    public Double getCpuUserUsage() {
+        return cpuUserUsage;
+    }
+
+    public void setCpuUserUsage(Double cpuUserUsage) {
+        this.cpuUserUsage = cpuUserUsage;
+    }
+
+    public Double getCpuWait() {
+        return cpuWait;
+    }
+
+    public void setCpuWait(Double cpuWait) {
+        this.cpuWait = cpuWait;
+    }
+
+    public Double getCpuFree() {
+        return cpuFree;
+    }
+
+    public void setCpuFree(Double cpuFree) {
+        this.cpuFree = cpuFree;
     }
 }
