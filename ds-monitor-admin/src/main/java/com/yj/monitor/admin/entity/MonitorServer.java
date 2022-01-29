@@ -1,31 +1,31 @@
-package com.yj.monitor.api.domain;
+package com.yj.monitor.admin.entity;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @Author gaolei
- * @Date 2022/1/25 下午7:47
- * @Version 1.0
+ * monitor_server
+ * @author gaolei
  */
-public class Server implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class MonitorServer {
+    /**
+     * 主键id
+     */
+    private Long id;
 
     /**
-     * mac/linux
+     * 批次id
      */
-    private String serverType;
-    private Integer availableProcessors;
-    /**
-     * x86_64
-     */
-    private String arch;
+    private Long batchId;
 
-    private String userName;
-    private String userCountry;
-    private String sunManagementCompile;
-    private String jvmName;
-    private String jvmInfo;
+    /**
+     * 客户端地址
+     */
+    private String clientAddress;
+
+    /**
+     * 客户端id
+     */
+    private String clientId;
 
     /**
      * 系统负载
@@ -82,69 +82,62 @@ public class Server implements Serializable {
      */
     private Double cpuFree;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
 
-    public String getServerType() {
-        return serverType;
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 0-未删除 1-删除
+     */
+    private Integer idDeleted;
+
+    public MonitorServer() {
     }
 
-    public void setServerType(String serverType) {
-        this.serverType = serverType;
+    public Long getId() {
+        return id;
     }
 
-    public Integer getAvailableProcessors() {
-        return availableProcessors;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setAvailableProcessors(Integer availableProcessors) {
-        this.availableProcessors = availableProcessors;
+    public Long getBatchId() {
+        return batchId;
     }
 
-    public String getArch() {
-        return arch;
+    public void setBatchId(Long batchId) {
+        this.batchId = batchId;
     }
 
-    public void setArch(String arch) {
-        this.arch = arch;
+    public String getClientAddress() {
+        return clientAddress;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setClientAddress(String clientAddress) {
+        this.clientAddress = clientAddress;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getClientId() {
+        return clientId;
     }
 
-    public String getUserCountry() {
-        return userCountry;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public void setUserCountry(String userCountry) {
-        this.userCountry = userCountry;
+    public Double getSystemLoadAverage() {
+        return systemLoadAverage;
     }
 
-    public String getSunManagementCompile() {
-        return sunManagementCompile;
-    }
-
-    public void setSunManagementCompile(String sunManagementCompile) {
-        this.sunManagementCompile = sunManagementCompile;
-    }
-
-    public String getJvmName() {
-        return jvmName;
-    }
-
-    public void setJvmName(String jvmName) {
-        this.jvmName = jvmName;
-    }
-
-    public String getJvmInfo() {
-        return jvmInfo;
-    }
-
-    public void setJvmInfo(String jvmInfo) {
-        this.jvmInfo = jvmInfo;
+    public void setSystemLoadAverage(Double systemLoadAverage) {
+        this.systemLoadAverage = systemLoadAverage;
     }
 
     public Long getDiskTotal() {
@@ -169,18 +162,6 @@ public class Server implements Serializable {
 
     public void setDiskThreshold(Long diskThreshold) {
         this.diskThreshold = diskThreshold;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Double getSystemLoadAverage() {
-        return systemLoadAverage;
-    }
-
-    public void setSystemLoadAverage(Double systemLoadAverage) {
-        this.systemLoadAverage = systemLoadAverage;
     }
 
     public Double getSystemCpuUsage() {
@@ -237,5 +218,29 @@ public class Server implements Serializable {
 
     public void setCpuFree(Double cpuFree) {
         this.cpuFree = cpuFree;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getIdDeleted() {
+        return idDeleted;
+    }
+
+    public void setIdDeleted(Integer idDeleted) {
+        this.idDeleted = idDeleted;
     }
 }

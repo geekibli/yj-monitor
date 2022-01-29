@@ -13,6 +13,8 @@ public interface Defaults {
 
     Integer PORT = 8080;
 
+    Integer RPC_PORT = 9050;
+
     Integer RETRY_TIME = 3;
 
     String ACCESS_KEY = "admin";

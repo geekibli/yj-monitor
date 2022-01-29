@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.MonitorServerMapper">
+  <resultMap id="BaseResultMap" type="com.yj.monitor.admin.entity.MonitorServer">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="system_load_average" jdbcType="DOUBLE" property="systemLoadAverage" />
+    <result column="disk_total" jdbcType="BIGINT" property="diskTotal" />
+    <result column="disk_free" jdbcType="BIGINT" property="diskFree" />
+    <result column="disk_threshold" jdbcType="BIGINT" property="diskThreshold" />
+    <result column="system_cpu_usage" jdbcType="DOUBLE" property="systemCpuUsage" />
+    <result column="server_host" jdbcType="VARCHAR" property="serverHost" />
+    <result column="cpu_total_usage" jdbcType="DOUBLE" property="cpuTotalUsage" />
+    <result column="cpu_sys_usage" jdbcType="DOUBLE" property="cpuSysUsage" />
+    <result column="cpu_user_usage" jdbcType="DOUBLE" property="cpuUserUsage" />
+    <result column="cpu_wait" jdbcType="DOUBLE" property="cpuWait" />
+    <result column="cpu_free" jdbcType="DOUBLE" property="cpuFree" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="id_deleted" jdbcType="TINYINT" property="idDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, client_address, client_id, system_load_average, disk_total, disk_free, 
+    disk_threshold, system_cpu_usage, server_host, cpu_total_usage, cpu_sys_usage, cpu_user_usage, 
+    cpu_wait, cpu_free, create_time, update_time, id_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitor_server
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitor_server
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yj.monitor.admin.entity.MonitorServer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_server (batch_id, client_address, client_id, 
+      system_load_average, disk_total, disk_free, 
+      disk_threshold, system_cpu_usage, server_host, 
+      cpu_total_usage, cpu_sys_usage, cpu_user_usage, 
+      cpu_wait, cpu_free, create_time, 
+      update_time, id_deleted)
+    values (#{batchId,jdbcType=BIGINT}, #{clientAddress,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{systemLoadAverage,jdbcType=DOUBLE}, #{diskTotal,jdbcType=BIGINT}, #{diskFree,jdbcType=BIGINT}, 
+      #{diskThreshold,jdbcType=BIGINT}, #{systemCpuUsage,jdbcType=DOUBLE}, #{serverHost,jdbcType=VARCHAR}, 
+      #{cpuTotalUsage,jdbcType=DOUBLE}, #{cpuSysUsage,jdbcType=DOUBLE}, #{cpuUserUsage,jdbcType=DOUBLE}, 
+      #{cpuWait,jdbcType=DOUBLE}, #{cpuFree,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{idDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yj.monitor.admin.entity.MonitorServer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monitor_server
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="clientAddress != null">
+        client_address,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="systemLoadAverage != null">
+        system_load_average,
+      </if>
+      <if test="diskTotal != null">
+        disk_total,
+      </if>
+      <if test="diskFree != null">
+        disk_free,
+      </if>
+      <if test="diskThreshold != null">
+        disk_threshold,
+      </if>
+      <if test="systemCpuUsage != null">
+        system_cpu_usage,
+      </if>
+      <if test="serverHost != null">
+        server_host,
+      </if>
+      <if test="cpuTotalUsage != null">
+        cpu_total_usage,
+      </if>
+      <if test="cpuSysUsage != null">
+        cpu_sys_usage,
+      </if>
+      <if test="cpuUserUsage != null">
+        cpu_user_usage,
+      </if>
+      <if test="cpuWait != null">
+        cpu_wait,
+      </if>
+      <if test="cpuFree != null">
+        cpu_free,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="idDeleted != null">
+        id_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchId != null">
+        #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemLoadAverage != null">
+        #{systemLoadAverage,jdbcType=DOUBLE},
+      </if>
+      <if test="diskTotal != null">
+        #{diskTotal,jdbcType=BIGINT},
+      </if>
+      <if test="diskFree != null">
+        #{diskFree,jdbcType=BIGINT},
+      </if>
+      <if test="diskThreshold != null">
+        #{diskThreshold,jdbcType=BIGINT},
+      </if>
+      <if test="systemCpuUsage != null">
+        #{systemCpuUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="serverHost != null">
+        #{serverHost,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuTotalUsage != null">
+        #{cpuTotalUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuSysUsage != null">
+        #{cpuSysUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuUserUsage != null">
+        #{cpuUserUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuWait != null">
+        #{cpuWait,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuFree != null">
+        #{cpuFree,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idDeleted != null">
+        #{idDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.monitor.admin.entity.MonitorServer">
+    update monitor_server
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=BIGINT},
+      </if>
+      <if test="clientAddress != null">
+        client_address = #{clientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemLoadAverage != null">
+        system_load_average = #{systemLoadAverage,jdbcType=DOUBLE},
+      </if>
+      <if test="diskTotal != null">
+        disk_total = #{diskTotal,jdbcType=BIGINT},
+      </if>
+      <if test="diskFree != null">
+        disk_free = #{diskFree,jdbcType=BIGINT},
+      </if>
+      <if test="diskThreshold != null">
+        disk_threshold = #{diskThreshold,jdbcType=BIGINT},
+      </if>
+      <if test="systemCpuUsage != null">
+        system_cpu_usage = #{systemCpuUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="serverHost != null">
+        server_host = #{serverHost,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuTotalUsage != null">
+        cpu_total_usage = #{cpuTotalUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuSysUsage != null">
+        cpu_sys_usage = #{cpuSysUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuUserUsage != null">
+        cpu_user_usage = #{cpuUserUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuWait != null">
+        cpu_wait = #{cpuWait,jdbcType=DOUBLE},
+      </if>
+      <if test="cpuFree != null">
+        cpu_free = #{cpuFree,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idDeleted != null">
+        id_deleted = #{idDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yj.monitor.admin.entity.MonitorServer">
+    update monitor_server
+    set batch_id = #{batchId,jdbcType=BIGINT},
+      client_address = #{clientAddress,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      system_load_average = #{systemLoadAverage,jdbcType=DOUBLE},
+      disk_total = #{diskTotal,jdbcType=BIGINT},
+      disk_free = #{diskFree,jdbcType=BIGINT},
+      disk_threshold = #{diskThreshold,jdbcType=BIGINT},
+      system_cpu_usage = #{systemCpuUsage,jdbcType=DOUBLE},
+      server_host = #{serverHost,jdbcType=VARCHAR},
+      cpu_total_usage = #{cpuTotalUsage,jdbcType=DOUBLE},
+      cpu_sys_usage = #{cpuSysUsage,jdbcType=DOUBLE},
+      cpu_user_usage = #{cpuUserUsage,jdbcType=DOUBLE},
+      cpu_wait = #{cpuWait,jdbcType=DOUBLE},
+      cpu_free = #{cpuFree,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      id_deleted = #{idDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.monitor.admin.mapper.ext.MonitorServerExtMapper">
+    <select id="getList" resultMap="com.yj.monitor.admin.mapper.MonitorServerMapper.BaseResultMap">
+        select client_id, system_load_average, disk_total, disk_free,
+        system_cpu_usage, cpu_total_usage, cpu_sys_usage, cpu_user_usage, cpu_wait, cpu_free, create_time
+        from monitor_server
+        where client_id = #{clientId}
+        AND create_time between #{fromDate} and #{toDate}
+    </select>
+</mapper>

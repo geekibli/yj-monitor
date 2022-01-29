@@ -6,6 +6,7 @@ import com.yj.monitor.api.domain.*;
 import com.yj.monitor.api.rpc.MonitorApi;
 import com.yj.monitor.core.config.MonitorConfig;
 import com.yj.monitor.core.handler.JDKManagementHandler;
+import com.yj.monitor.core.handler.OshiHandler;
 import com.yj.monitor.core.handler.SpringBootActuatorHandler;
 import com.yj.monitor.rpc.anno.Rpc;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class MonitorService implements MonitorApi {
     private MonitorConfig monitorConfig;
     @Resource
     private SpringBootActuatorHandler springBootActuatorHandler;
+    @Resource
+    private OshiHandler oshiHandler;
 
 
     @Override
@@ -60,7 +63,7 @@ public class MonitorService implements MonitorApi {
         server.setServerType(operatingSystem.get("Name"));
         server.setAvailableProcessors(Integer.valueOf(operatingSystem.get("AvailableProcessors")));
         server.setArch(operatingSystem.get("Arch"));
-        server.setSystemLoadAverage(operatingSystem.get("SystemLoadAverage"));
+        server.setSystemLoadAverage(new BigDecimal(operatingSystem.get("SystemLoadAverage")).doubleValue());
 
         Map<String, String> systemProperties = jdkManagementHandler.getSystemProperties();
         server.setSunManagementCompile(systemProperties.get("sun.management.compiler"));
@@ -74,7 +77,19 @@ public class MonitorService implements MonitorApi {
         server.setDiskTotal(disk.getTotal());
         server.setDiskFree(disk.getFree());
         server.setDiskThreshold(disk.getThreshold());
-        server.setSystemCpuUsage(springBootActuatorHandler.getSystemCpuUsageVal(monitorConfig.getApplicationPort()));
+
+        String systemCpuUsage = springBootActuatorHandler.getSystemCpuUsageVal(monitorConfig.getApplicationPort());
+        server.setSystemCpuUsage(new BigDecimal(systemCpuUsage).doubleValue());
+
+        Cpu cpu = oshiHandler.getCpu();
+        server.setCpuFree(cpu.getFree());
+        server.setCpuSysUsage(cpu.getSys());
+        server.setCpuUserUsage(cpu.getUsed());
+        server.setCpuFree(cpu.getFree());
+        server.setCpuWait(cpu.getWait());
+        server.setCpuTotalUsage(cpu.getTotal());
+
+        server.setServerHost(monitorConfig.getLocalHost());
         return server;
     }
 

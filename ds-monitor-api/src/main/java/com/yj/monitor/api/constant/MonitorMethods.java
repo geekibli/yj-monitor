@@ -41,15 +41,19 @@ public interface MonitorMethods {
     Method JVM_GC_PAUSE = new Method("com.yj.monitor.core.service.ActuatorMetricService", "getGcPause", "Time spent in GC pause");
 
 
+
+    Method SERVER_BASE = new Method("com.yj.monitor.core.service.ServerService", "getServer", "获取服务器基本信息");
+
     List<Method> SCHEDULE_MONITOR_METHODS = Lists.newArrayList(
             MEMORY,
             GC,
             THREAD,
             CLASSLOADER,
-            MEMORY_PARTITION
+            MEMORY_PARTITION,
+            SERVER_BASE
     );
 
-    Method SERVER_BASE = new Method("com.yj.monitor.core.service.ServerService", "getServer", "获取服务器基本信息");
+
 
 
 }

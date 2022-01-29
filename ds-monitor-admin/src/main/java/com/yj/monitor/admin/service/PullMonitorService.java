@@ -33,6 +33,8 @@ public class PullMonitorService {
     @Resource
     private GcService gcService;
     @Resource
+    private ServerService serverService;
+    @Resource
     private AdminMonitorConfig adminMonitorConfig;
 
     /**
@@ -74,6 +76,9 @@ public class PullMonitorService {
                 break;
             case "getGcInfo":
                 gcService.saveGc(monitorEvent);
+                break;
+            case "getServer":
+                serverService.saveThread(monitorEvent);
                 break;
             default:
                 logger.info("无响应的MonitorEvent : sequence-{}  event:{}", l, JSON.toJSONString(monitorEvent));

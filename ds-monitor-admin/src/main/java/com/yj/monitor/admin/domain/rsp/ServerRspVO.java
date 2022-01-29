@@ -1,15 +1,11 @@
-package com.yj.monitor.api.domain;
-
-import java.io.Serializable;
+package com.yj.monitor.admin.domain.rsp;
 
 /**
  * @Author gaolei
- * @Date 2022/1/25 下午7:47
+ * @Date 2022/1/28 上午10:30
  * @Version 1.0
  */
-public class Server implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class ServerRspVO {
 
     /**
      * mac/linux
@@ -20,6 +16,7 @@ public class Server implements Serializable {
      * x86_64
      */
     private String arch;
+    private String systemLoadAverage;
 
     private String userName;
     private String userCountry;
@@ -27,35 +24,15 @@ public class Server implements Serializable {
     private String jvmName;
     private String jvmInfo;
 
-    /**
-     * 系统负载
-     */
-    private Double systemLoadAverage;
 
-    /**
-     * 磁盘总量
-     */
-    private Long diskTotal;
+    private String diskTotal;
+    private String diskFree;
+    private String diskThreshold;
 
-    /**
-     * 可用磁盘
-     */
-    private Long diskFree;
+    private String systemCpuUsage;
 
-    /**
-     * 磁盘阈值
-     */
-    private Long diskThreshold;
-
-    /**
-     * cpu使用
-     */
-    private Double systemCpuUsage;
-
-    /**
-     * 服务器ip
-     */
     private String serverHost;
+
 
     /**
      * cpu使用率
@@ -82,6 +59,8 @@ public class Server implements Serializable {
      */
     private Double cpuFree;
 
+    public ServerRspVO() {
+    }
 
     public String getServerType() {
         return serverType;
@@ -105,6 +84,14 @@ public class Server implements Serializable {
 
     public void setArch(String arch) {
         this.arch = arch;
+    }
+
+    public String getSystemLoadAverage() {
+        return systemLoadAverage;
+    }
+
+    public void setSystemLoadAverage(String systemLoadAverage) {
+        this.systemLoadAverage = systemLoadAverage;
     }
 
     public String getUserName() {
@@ -147,47 +134,35 @@ public class Server implements Serializable {
         this.jvmInfo = jvmInfo;
     }
 
-    public Long getDiskTotal() {
+    public String getDiskTotal() {
         return diskTotal;
     }
 
-    public void setDiskTotal(Long diskTotal) {
+    public void setDiskTotal(String diskTotal) {
         this.diskTotal = diskTotal;
     }
 
-    public Long getDiskFree() {
+    public String getDiskFree() {
         return diskFree;
     }
 
-    public void setDiskFree(Long diskFree) {
+    public void setDiskFree(String diskFree) {
         this.diskFree = diskFree;
     }
 
-    public Long getDiskThreshold() {
+    public String getDiskThreshold() {
         return diskThreshold;
     }
 
-    public void setDiskThreshold(Long diskThreshold) {
+    public void setDiskThreshold(String diskThreshold) {
         this.diskThreshold = diskThreshold;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Double getSystemLoadAverage() {
-        return systemLoadAverage;
-    }
-
-    public void setSystemLoadAverage(Double systemLoadAverage) {
-        this.systemLoadAverage = systemLoadAverage;
-    }
-
-    public Double getSystemCpuUsage() {
+    public String getSystemCpuUsage() {
         return systemCpuUsage;
     }
 
-    public void setSystemCpuUsage(Double systemCpuUsage) {
+    public void setSystemCpuUsage(String systemCpuUsage) {
         this.systemCpuUsage = systemCpuUsage;
     }
 

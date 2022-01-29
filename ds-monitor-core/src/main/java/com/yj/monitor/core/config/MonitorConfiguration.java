@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import oshi.SystemInfo;
 
 import javax.annotation.Resource;
+import javax.validation.groups.Default;
 
 /**
  * @Author gaolei
@@ -43,6 +44,9 @@ public class MonitorConfiguration {
 
     @Value(value = "${spring.application.name}")
     private String applicationName;
+
+    @Value(value = "${rpc-port}")
+    private Integer rpcPort;
 
     @Resource
     private DsMonitorProperties monitorProperties;
@@ -63,6 +67,8 @@ public class MonitorConfiguration {
         config.setAdminUrl(IpUtil.ip2Url(adminConfig.getHost(), adminConfig.getPort()));
         String localIp = IpUtil.getMyIp();
         config.setLocalHost(localIp);
+
+        config.setRpcPort(rpcPort == null ? Defaults.RPC_PORT : rpcPort);
 
         Token token = new Token();
         String accessKey = monitorProperties.getAdmin().getAccessKey();
